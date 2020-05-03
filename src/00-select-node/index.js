@@ -14,6 +14,9 @@ export default function SelectNode () {
       const { TestInstanceCount: nodeCount } = await response.json()
       if (state.canceled) return
       setNodeCount(nodeCount)
+      for (let i = 0; i < nodeCount; i++) {
+        console.log('Query node', i)
+      }
     }
     run()
     return () => {
