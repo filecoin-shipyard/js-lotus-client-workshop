@@ -1,33 +1,34 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import ReactDOM from 'react-dom'
-import useLotusClient from './use-lotus-client'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import ChainHeight from './01-chain-head'
 
-function App() {
-  const client = useLotusClient(0, 'node')
-  const [height, setHeight] = useState()
+function Home () {
+  return <h2>Home</h2>
+}
 
-  useEffect(() => {
-    let state = { canceled: false }
-    if (!client) return
-    setHeight('Loading...')
-    async function run() {
-      if (state.canceled) return
-      const result = await client.chainHead()
-      if (state.canceled) return
-      setHeight(result.Height)
-      setTimeout(run, 1000)
-    }
-    run()
-    return () => {
-      state.canceled = true
-    }
-  }, [client])
-
+function App () {
   return (
-    <div>
-      <h2>Height</h2>
-      <h1>{height}</h1>
-    </div>
+    <Router>
+      <div>
+        <ul>
+          <li>
+            <Link to='/'>Home</Link>
+          </li>
+          <li>
+            <Link to='/chain-height'>Chain Height</Link>
+          </li>
+        </ul>
+        <Switch>
+          <Route path='/chain-height'>
+            <ChainHeight />
+          </Route>
+          <Route path='/'>
+            <Home />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   )
 }
 
