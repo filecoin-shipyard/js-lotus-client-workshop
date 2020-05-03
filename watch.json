@@ -8,11 +8,11 @@
   "restart": {
     "exclude": [
       "^public/",
-      "^dist/",
-      "^build/"
+      "^src/"
     ],
     "include": [
-      "\\.json"
+      "^server/",
+      "^watch\\.json$"
     ]
   },
   "throttle": 100

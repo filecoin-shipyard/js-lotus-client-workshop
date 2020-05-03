@@ -1,26 +1,45 @@
 {
-  "name": "rl1-lotus-client-workshop",
-  "version": "0.0.1",
+  "name": "starter-cra-and-react",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "create-react-app": "^3.4.1",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "^3.4.0",
+    "express": "^4.17.1",
+    "concurrently": "^5.0.2",
+    "http-proxy-middleware": "^1.0.0",
     "@filecoin-shipyard/lotus-client-schema": "^0.0.7",
     "@filecoin-shipyard/lotus-client-rpc": "^0.0.4",
     "@filecoin-shipyard/lotus-client-provider-browser": "^0.0.4"
   },
-  "devDependencies": {
-    "react-scripts": "3.4.1"
-  },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm run development",
+    "development": "NODE_ENV=development concurrently --kill-others \"npm run client\" \"npm run server\"",
+    "production": "npm run build && NODE_ENV=production npm run server",
+    "server": "node server/server.js",
+    "client": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "license": "MIT",
-  "browserslist": [
-    "last 1 Chrome version"
-  ]
+  "engines": {
+    "node": "10.x"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "license": "MIT"
 }
