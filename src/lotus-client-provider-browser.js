@@ -1,7 +1,8 @@
 class BrowserProvider {
   constructor (url, options = {}) {
     this.url = url
-    this.httpUrl = options.httpUrl || url.replace(/^wss:/, 'https:')
+    this.httpUrl =
+      options.httpUrl || url.replace(/^wss:/, 'https:').replace(/^ws:/, 'http:')
     this.importUrl =
       options.importUrl || this.httpUrl.replace(/\/rpc\//, '/rest/') + '/import'
     this.id = 0
@@ -209,7 +210,9 @@ class BrowserProvider {
     })
     // FIXME: Check return code, errors
     const result = await response.json()
-    const { Cid: { "/": cid }} = result
+    const {
+      Cid: { '/': cid }
+    } = result
 
     return cid
   }
