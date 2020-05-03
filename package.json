@@ -3,18 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "create-react-app": "^3.2.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.10.2",
+    "create-react-app": "^3.4.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "@filecoin-shipyard/lotus-client-schema": "^0.0.7",
     "@filecoin-shipyard/lotus-client-rpc": "^0.0.4",
     "@filecoin-shipyard/lotus-client-provider-browser": "^0.0.4"
   },
   "devDependencies": {
-    "react-scripts": "0.9.5"
-  },
-  "engines": {
-    "node": "8.x"
+    "react-scripts": "3.4.1"
   },
   "scripts": {
     "start": "react-scripts start",

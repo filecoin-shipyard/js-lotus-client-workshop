@@ -7,6 +7,7 @@ export default function App() {
 
   useEffect(() => {
     let state = { canceled: false }
+    if (!client) return
     setHeight('Loading...')
     async function run() {
       if (state.canceled) return
@@ -19,7 +20,7 @@ export default function App() {
     return () => {
       state.canceled = true
     }
-  }, [])
+  }, [client])
 
   return (
     <div>

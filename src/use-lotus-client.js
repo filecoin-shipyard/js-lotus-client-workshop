@@ -17,8 +17,12 @@ export default function useLotusClient (nodeNumber, nodeOrMiner) {
         return await response.text()
       }
     })
-    setClient(new LotusRPC(provider, { schema }))
-  }, [])
+    const client = new LotusRPC(provider, { schema })
+    setClient(client)
+    return () => {
+      client.destroy()
+    }
+  }, [nodeNumber, nodeOrMiner])
 
   return client
 }
