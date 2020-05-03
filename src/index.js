@@ -1,7 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import ChainHeight from './01-chain-head'
+import SelectNode from './00-select-node'
+import ChainHeight from './01-chain-height'
 
 function Home () {
   return <h2>Home</h2>
@@ -16,10 +17,16 @@ function App () {
             <Link to='/'>Home</Link>
           </li>
           <li>
+            <Link to='/select-node'>Select Node</Link>
+          </li>
+          <li>
             <Link to='/chain-height'>Chain Height</Link>
           </li>
         </ul>
         <Switch>
+          <Route path='/select-node'>
+            <SelectNode />
+          </Route>
           <Route path='/chain-height'>
             <ChainHeight />
           </Route>
@@ -32,4 +39,5 @@ function App () {
   )
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const rootEl = document.getElementById('root')
+ReactDOM.createRoot(rootEl).render(<App />)
