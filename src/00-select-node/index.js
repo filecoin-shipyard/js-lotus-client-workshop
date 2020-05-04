@@ -5,7 +5,6 @@ import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
 
 export default function SelectNode ({ appState, updateAppState }) {
   const available = appState.available || []
-
   const updateAvailable = useCallback(
     updateFunc => {
       updateAppState(draft => {
@@ -17,22 +16,29 @@ export default function SelectNode ({ appState, updateAppState }) {
     },
     [updateAppState]
   )
+  const { selectedNode, nodesScanned } = appState
 
   useEffect(() => {
+    if (nodesScanned) return
     const api = 'lotus.testground.ipfs.team/api'
     let state = { canceled: false }
+    updateAvailable(draft => {
+      draft.splice(0) // clear array
+    })
     async function run () {
       if (state.canceled) return
       const paramsUrl = 'https://' + api + `/0/testplan/params`
       const response = await fetch(paramsUrl)
       const { TestInstanceCount: nodeCount } = await response.json()
       if (state.canceled) return
+      const available = {}
       for (let i = 0; i < nodeCount; i++) {
         const url = 'https://' + api + `/${i}/miner/rpc/v0`
         const provider = new BrowserProvider(url, { transport: 'http' })
         const client = new LotusRPC(provider, { schema })
         try {
           const minerAddress = await client.actorAddress()
+          available[i] = minerAddress
           updateAvailable(draft => {
             draft[i] = minerAddress
           })
@@ -40,23 +46,48 @@ export default function SelectNode ({ appState, updateAppState }) {
           console.warn('Node error:', i, e)
         }
       }
+      updateAppState(draft => {
+        draft.nodesScanned = true
+      })
+      if (typeof selectedNode === 'undefined' || !available[selectedNode]) {
+        // Select a random node
+        const keys = Object.keys(available)
+        const randomIndex =  Math.floor(Math.random() * Math.floor(keys.length))
+        updateAppState(draft => {
+          draft.selectedNode = Number(keys[randomIndex])
+        })
+      }
     }
     run()
     return () => {
       state.canceled = true
     }
-  }, [updateAvailable])
+  }, [updateAppState, updateAvailable, nodesScanned, selectedNode])
 
   return (
     <div>
       <h2>Available Nodes</h2>
-      <ul>
+      <div>
         {available.map((miner, i) => (
-          <li key={i}>
+          <div key={i}>
+            <input
+              type='radio'
+              name='node'
+              value={i}
+              checked={i === selectedNode}
+              onChange={selectNode}
+            />
             {i}: {miner}
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   )
+
+  function selectNode (evt) {
+    const selectedNode = Number(evt.currentTarget.value)
+    updateAppState(draft => {
+      draft.selectedNode = selectedNode
+    })
+  }
 }

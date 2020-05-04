@@ -29,15 +29,6 @@ function App () {
     }
   }, [appState, savedState, setSavedState])
 
-  useEffect(() => {
-    let ticker = 0
-    function tick () {
-      updateAppState(draft => { draft.ticker = ticker++ })
-      setTimeout(tick, 1000)
-    }
-    tick()
-  }, [updateAppState])
-
   const baseProps = {
     appState,
     updateAppState

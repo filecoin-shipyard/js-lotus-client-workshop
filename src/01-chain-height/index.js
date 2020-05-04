@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import useLotusClient from '../lib/use-lotus-client'
 
 export default function ChainHead ({ appState }) {
-  const client = useLotusClient(0, 'node')
+  const { selectedNode } = appState
+  const client = useLotusClient(selectedNode, 'node')
   const [height, setHeight] = useState()
 
   useEffect(() => {
@@ -26,6 +27,7 @@ export default function ChainHead ({ appState }) {
     <div>
       <h2>Height</h2>
       <h1>{height}</h1>
+      (using Node #{selectedNode})
     </div>
   )
 }
