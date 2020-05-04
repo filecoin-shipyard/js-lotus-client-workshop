@@ -27,7 +27,7 @@ export default function ChainNotify ({ appState }) {
     })
     promise.catch(err => { console.error(err) })
     return cancelFunc
-  }, [client])
+  }, [client, updateRounds])
 
   useEffect(() => {
     if (lastEl && lastEl.current) {

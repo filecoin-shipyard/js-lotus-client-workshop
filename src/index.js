@@ -9,6 +9,8 @@ import SelectNode from './00-select-node'
 import ChainHeight from './01-chain-height'
 import MinerAddress from './02-miner-address'
 import ChainNotify from './03-chain-notify'
+import StatePowerAll from './04-state-power-all'
+import StateListMiners from './05-state-list-miners'
 import './index.css'
 
 let initialState
@@ -48,6 +50,8 @@ function App () {
           <Link to='/chain-height'>Chain Height</Link>
           <Link to='/miner-address'>Miner Address</Link>
           <Link to='/chain-notify'>Chain Notify</Link>
+          <Link to='/state-power-all'>Power: All</Link>
+          <Link to='/state-list-miners'>List Miners</Link>
         </nav>
         <ErrorBoundary>
           <Switch>
@@ -62,6 +66,12 @@ function App () {
             </Route>
             <Route path='/chain-notify'>
               <ChainNotify {...baseProps} />
+            </Route>
+            <Route path='/state-power-all'>
+              <StatePowerAll {...baseProps} />
+            </Route>
+            <Route path='/state-list-miners'>
+              <StateListMiners {...baseProps} />
             </Route>
             <Route path='/'>
               <Home />
