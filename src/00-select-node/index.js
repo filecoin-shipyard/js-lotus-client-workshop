@@ -18,7 +18,7 @@ export default function SelectNode ({ appState, updateAppState }) {
               checked={i === selectedNode}
               onChange={selectNode}
             />
-            {i}: {miner}
+            #{i}: {miner}
           </div>
         ))}
       </div>

@@ -1,0 +1,16 @@
+@font-face {
+  font-family: 'mono';
+  src: url('https://cdn.glitch.com/bfd0503a-959a-42d3-92ce-f8092b3eb1f2%2FSFMono-Medium.woff?v=1588621954997');
+}
+@font-face {
+  font-family: 'mono-bold';
+  src: url('https://cdn.glitch.com/bfd0503a-959a-42d3-92ce-f8092b3eb1f2%2FSFMono-Bold.woff?v=1588621943612');
+}
+
+body {
+  font-family: mono;
+}
+
+nav a {
+  padding: 0.2rem;
+}

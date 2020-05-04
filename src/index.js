@@ -7,6 +7,12 @@ import produce from 'immer'
 import useTestgroundNet from './lib/use-testground-net'
 import SelectNode from './00-select-node'
 import ChainHeight from './01-chain-height'
+import MinerAddress from './02-miner-address'
+import ChainNotify from './03-chain-notify'
+import StatePowerAll from './04-state-power-all'
+import StateListMiners from './05-state-list-miners'
+import StatePowerMiners from './06-state-power-miners'
+import './index.css'
 
 let initialState
 const initialStateJson = localStorage.getItem('state')
@@ -39,30 +45,44 @@ function App () {
   return (
     <Router>
       <div>
-        <ul>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='/select-node'>Select Node</Link>
-          </li>
-          <li>
-            <Link to='/chain-height'>Chain Height</Link>
-          </li>
-        </ul>
-          <ErrorBoundary>
-            <Switch>
-              <Route path='/select-node'>
-                <SelectNode {...baseProps} />
-              </Route>
-              <Route path='/chain-height'>
-                <ChainHeight {...baseProps} />
-              </Route>
-              <Route path='/'>
-                <Home />
-              </Route>
-            </Switch>
-          </ErrorBoundary>
+        <nav style={{ display: 'flex' }}>
+          <Link to='/'>Home</Link>
+          <Link to='/select-node'>Select Node</Link>
+          <Link to='/chain-height'>Chain Height</Link>
+          <Link to='/miner-address'>Miner Address</Link>
+          <Link to='/chain-notify'>Chain Notify</Link>
+          <Link to='/state-power-all'>Power: All</Link>
+          <Link to='/state-list-miners'>List Miners</Link>
+          <Link to='/state-power-miners'>Power: Miners</Link>
+        </nav>
+        <ErrorBoundary>
+          <Switch>
+            <Route path='/select-node'>
+              <SelectNode {...baseProps} />
+            </Route>
+            <Route path='/chain-height'>
+              <ChainHeight {...baseProps} />
+            </Route>
+            <Route path='/miner-address'>
+              <MinerAddress {...baseProps} />
+            </Route>
+            <Route path='/chain-notify'>
+              <ChainNotify {...baseProps} />
+            </Route>
+            <Route path='/state-power-all'>
+              <StatePowerAll {...baseProps} />
+            </Route>
+            <Route path='/state-list-miners'>
+              <StateListMiners {...baseProps} />
+            </Route>
+            <Route path='/state-power-miners'>
+              <StatePowerMiners {...baseProps} />
+            </Route>
+            <Route path='/'>
+              <Home />
+            </Route>
+          </Switch>
+        </ErrorBoundary>
       </div>
     </Router>
   )
