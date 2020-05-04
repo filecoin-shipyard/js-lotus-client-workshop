@@ -8,6 +8,8 @@ import useTestgroundNet from './lib/use-testground-net'
 import SelectNode from './00-select-node'
 import ChainHeight from './01-chain-height'
 import MinerAddress from './02-miner-address'
+import ChainNotify from './03-chain-notify'
+import './index.css'
 
 let initialState
 const initialStateJson = localStorage.getItem('state')
@@ -40,36 +42,32 @@ function App () {
   return (
     <Router>
       <div>
-        <ul>
-          <li>
-            <Link to='/'>Home</Link>
-          </li>
-          <li>
-            <Link to='/select-node'>Select Node</Link>
-          </li>
-          <li>
-            <Link to='/chain-height'>Chain Height</Link>
-          </li>
-          <li>
-            <Link to='/miner-address'>Miner Address</Link>
-          </li>
-        </ul>
-          <ErrorBoundary>
-            <Switch>
-              <Route path='/select-node'>
-                <SelectNode {...baseProps} />
-              </Route>
-              <Route path='/chain-height'>
-                <ChainHeight {...baseProps} />
-              </Route>
-              <Route path='/miner-address'>
-                <MinerAddress {...baseProps} />
-              </Route>
-              <Route path='/'>
-                <Home />
-              </Route>
-            </Switch>
-          </ErrorBoundary>
+        <nav style={{ display: 'flex' }}>
+          <Link to='/'>Home</Link>
+          <Link to='/select-node'>Select Node</Link>
+          <Link to='/chain-height'>Chain Height</Link>
+          <Link to='/miner-address'>Miner Address</Link>
+          <Link to='/chain-notify'>Chain Notify</Link>
+        </nav>
+        <ErrorBoundary>
+          <Switch>
+            <Route path='/select-node'>
+              <SelectNode {...baseProps} />
+            </Route>
+            <Route path='/chain-height'>
+              <ChainHeight {...baseProps} />
+            </Route>
+            <Route path='/miner-address'>
+              <MinerAddress {...baseProps} />
+            </Route>
+            <Route path='/chain-notify'>
+              <ChainNotify {...baseProps} />
+            </Route>
+            <Route path='/'>
+              <Home />
+            </Route>
+          </Switch>
+        </ErrorBoundary>
       </div>
     </Router>
   )
