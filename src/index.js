@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import ErrorBoundary from './error-boundary.js'
 import { useImmer } from 'use-immer'
 import produce from 'immer'
+import useTestgroundNet from './lib/use-testground-net'
 import SelectNode from './00-select-node'
 import ChainHeight from './01-chain-height'
 
@@ -18,6 +19,7 @@ try {
 function App () {
   const [appState, updateAppState] = useImmer(initialState)
   const [savedState, setSavedState] = useState()
+  useTestgroundNet({ appState, updateAppState })
 
   useEffect(() => {
     const stateToSave = produce(appState, draft => {
