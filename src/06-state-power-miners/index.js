@@ -31,7 +31,7 @@ export default function StatePowerMiners ({ appState }) {
   return (
     <div>
       <h3>StateListMiners + StateMinerPower</h3>
-      <div>(using Node #{selectedNode})</div>
+      Let's list all the miners, and see how much power each one has.
       <ul>
         {miners &&
           miners.map(miner => (
@@ -40,6 +40,8 @@ export default function StatePowerMiners ({ appState }) {
             </li>
           ))}
       </ul>
+      <div>(using Node #{selectedNode})</div><br />
+      Use calls like StateMinerPower to build apps such as a mining leaderboard.
     </div>
   )
 }
