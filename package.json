@@ -10,11 +10,11 @@
     "express": "^4.17.1",
     "http-proxy-middleware": "^1.0.3",
     "immer": "^6.0.3",
-    "react": "^0.0.0-experimental-e5d06e34b",
-    "react-dom": "^0.0.0-experimental-e5d06e34b",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1",
-    "use-immer": "^0.4.0"
+    "use-immer": "^0.4.0",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.1"
   },
   "scripts": {
     "start": "npm run development",

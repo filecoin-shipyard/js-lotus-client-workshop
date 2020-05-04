@@ -70,5 +70,4 @@ function Home () {
   return <h2>Home</h2>
 }
 
-const rootEl = document.getElementById('root')
-ReactDOM.createRoot(rootEl).render(<App />)
+ReactDOM.render(<App />, document.getElementById('root'))
