@@ -7,6 +7,7 @@ import produce from 'immer'
 import useTestgroundNet from './lib/use-testground-net'
 import SelectNode from './00-select-node'
 import ChainHeight from './01-chain-height'
+import MinerAddress from './02-miner-address'
 
 let initialState
 const initialStateJson = localStorage.getItem('state')
@@ -49,6 +50,9 @@ function App () {
           <li>
             <Link to='/chain-height'>Chain Height</Link>
           </li>
+          <li>
+            <Link to='/miner-address'>Miner Address</Link>
+          </li>
         </ul>
           <ErrorBoundary>
             <Switch>
@@ -57,6 +61,9 @@ function App () {
               </Route>
               <Route path='/chain-height'>
                 <ChainHeight {...baseProps} />
+              </Route>
+              <Route path='/miner-address'>
+                <MinerAddress {...baseProps} />
               </Route>
               <Route path='/'>
                 <Home />
