@@ -1,11 +1,22 @@
-import React, { useEffect } from 'react'
-import { useImmer } from 'use-immer'
+import React, { useEffect, useCallback } from 'react'
 import LotusRPC from '../lotus-client-rpc'
 import BrowserProvider from '../lotus-client-provider-browser'
 import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
 
-export default function SelectNode () {
-  const [available, updateAvailable] = useImmer([])
+export default function SelectNode ({ appState, updateAppState }) {
+  const available = appState.available || []
+
+  const updateAvailable = useCallback(
+    updateFunc => {
+      updateAppState(draft => {
+        if (!draft.available) {
+          draft.available = []
+        }
+        updateFunc(draft.available)
+      })
+    },
+    [updateAppState]
+  )
 
   useEffect(() => {
     const api = 'lotus.testground.ipfs.team/api'

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import useLotusClient from '../lib/use-lotus-client'
 
-export default function ChainHead () {
+export default function ChainHead ({ appState }) {
   const client = useLotusClient(0, 'node')
   const [height, setHeight] = useState()
 
