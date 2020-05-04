@@ -1,34 +1,73 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
-import useLotusClient from './use-lotus-client'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import ErrorBoundary from './error-boundary.js'
+import { useImmer } from 'use-immer'
+import produce from 'immer'
+import SelectNode from './00-select-node'
+import ChainHeight from './01-chain-height'
 
-function App() {
-  const client = useLotusClient(0, 'node')
-  const [height, setHeight] = useState()
+let initialState
+const initialStateJson = localStorage.getItem('state')
+try {
+  initialState = JSON.parse(initialStateJson) || {}
+} catch (e) {
+  initialState = {}
+}
+
+function App () {
+  const [appState, updateAppState] = useImmer(initialState)
+  const [savedState, setSavedState] = useState()
 
   useEffect(() => {
-    let state = { canceled: false }
-    if (!client) return
-    setHeight('Loading...')
-    async function run() {
-      if (state.canceled) return
-      const result = await client.chainHead()
-      if (state.canceled) return
-      setHeight(result.Height)
-      setTimeout(run, 1000)
+    const stateToSave = produce(appState, draft => {
+      delete draft.ticker
+    })
+    if (stateToSave !== savedState) {
+      localStorage.setItem('state', JSON.stringify(stateToSave))
+      setSavedState(stateToSave)
     }
-    run()
-    return () => {
-      state.canceled = true
-    }
-  }, [client])
+  }, [appState, savedState, setSavedState])
+
+  const baseProps = {
+    appState,
+    updateAppState
+  }
 
   return (
-    <div>
-      <h2>Height</h2>
-      <h1>{height}</h1>
-    </div>
+    <Router>
+      <div>
+        <ul>
+          <li>
+            <Link to='/'>Home</Link>
+          </li>
+          <li>
+            <Link to='/select-node'>Select Node</Link>
+          </li>
+          <li>
+            <Link to='/chain-height'>Chain Height</Link>
+          </li>
+        </ul>
+          <ErrorBoundary>
+            <Switch>
+              <Route path='/select-node'>
+                <SelectNode {...baseProps} />
+              </Route>
+              <Route path='/chain-height'>
+                <ChainHeight {...baseProps} />
+              </Route>
+              <Route path='/'>
+                <Home />
+              </Route>
+            </Switch>
+          </ErrorBoundary>
+      </div>
+    </Router>
   )
+}
+
+function Home () {
+  return <h2>Home</h2>
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
