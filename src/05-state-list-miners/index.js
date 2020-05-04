@@ -19,7 +19,7 @@ export default function ListMiners ({ appState }) {
     content = 'Loading...'
   } else {
     content = (
-      <ul style={{ textAlign: 'left' }}>
+      <ul>
         {miners.map(miner => (
           <li key={miner}>{miner}</li>
         ))}

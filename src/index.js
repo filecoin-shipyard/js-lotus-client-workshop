@@ -11,6 +11,7 @@ import MinerAddress from './02-miner-address'
 import ChainNotify from './03-chain-notify'
 import StatePowerAll from './04-state-power-all'
 import StateListMiners from './05-state-list-miners'
+import StatePowerMiners from './06-state-power-miners'
 import './index.css'
 
 let initialState
@@ -52,6 +53,7 @@ function App () {
           <Link to='/chain-notify'>Chain Notify</Link>
           <Link to='/state-power-all'>Power: All</Link>
           <Link to='/state-list-miners'>List Miners</Link>
+          <Link to='/state-power-miners'>Power: Miners</Link>
         </nav>
         <ErrorBoundary>
           <Switch>
@@ -72,6 +74,9 @@ function App () {
             </Route>
             <Route path='/state-list-miners'>
               <StateListMiners {...baseProps} />
+            </Route>
+            <Route path='/state-power-miners'>
+              <StatePowerMiners {...baseProps} />
             </Route>
             <Route path='/'>
               <Home />
