@@ -1,4 +1,6 @@
-({ tourState, updateTourState }) => {
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+
+export default function CaptureMedia ({ appState, updateAppState }) {
   const videoRef = useRef()
   const canvasRef = useRef()
   const photoRef = useRef()
@@ -6,7 +8,7 @@
   const [height, setHeight] = useState(75)
   const [objectUrlAttribute, setObjectUrlAttribute] = useState()
   const width = 100
-  const stream = tourState.stream
+  const stream = appState.stream
 
   const canPlay = useCallback(ev => {
     const video = videoRef.current
@@ -16,44 +18,44 @@
   }, [])
 
   const wrappedVideoRef = useCallback(node => {
+    console.log('Jim wrappedVideoRef1')
     if (videoRef.current) {
       videoRef.current.removeEventListener('canplay', canPlay)
       videoRef.current = null
     }
     if (node) {
+      console.log('Jim wrappedVideoRef2')
       videoRef.current = node
       node.addEventListener('canplay', canPlay)
     }
-  }, [])
+  }, [canPlay])
 
   useEffect(() => {
-    if (tourState.capture && tourState.capture.blob) {
-      const objectUrl = URL.createObjectURL(tourState.capture.blob)
+    if (appState.capture && appState.capture.blob) {
+      const objectUrl = URL.createObjectURL(appState.capture.blob)
       setObjectUrlAttribute({ src: objectUrl })
       return () => {
         setObjectUrlAttribute(null)
         URL.revokeObjectURL(objectUrl)
       }
     }
-  }, [tourState.capture])
+  }, [appState.capture])
 
   useEffect(() => {
-    function checkClose () {
-      if (stream && tourState.index !== slideIndex) {
+    return () => {
+      if (stream) {
         stream.getTracks().forEach(track => track.stop())
-        updateTourState(draft => {
+        updateAppState(draft => {
           draft.stream = null
         })
         setOpened(false)
       }
     }
-    checkClose()
-    return checkClose
-  }, [tourState.index, opened, stream])
+  }, [stream, updateAppState])
 
   let sizePanel
-  if (tourState.capture && tourState.capture.blob) {
-    sizePanel = <span>{tourState.capture.blob.size} bytes</span>
+  if (appState.capture && appState.capture.blob) {
+    sizePanel = <span>{appState.capture.blob.size} bytes</span>
   } else {
     sizePanel = <span>No picture taken yet</span>
   }
@@ -115,6 +117,7 @@
           ref={photoRef}
           width={width}
           height={height}
+          alt=""
           {...objectUrlAttribute}
         />
       </div>
@@ -123,7 +126,7 @@
   )
 
   async function open () {
-    constraints = {
+    const constraints = {
       audio: false,
       video: true
     }
@@ -131,8 +134,9 @@
     const videoTracks = stream.getVideoTracks()
     console.log('Got stream with constraints:', constraints)
     console.log(`Using video device: ${videoTracks[0].label}`)
+    console.log('Jim videoRef', videoRef.current, stream)
     videoRef.current.srcObject = stream
-    updateTourState(draft => { draft.stream = stream })
+    updateAppState(draft => { draft.stream = stream })
     setOpened(true)
   }
 
@@ -140,8 +144,7 @@
     var context = canvasRef.current.getContext('2d')
     context.drawImage(videoRef.current, 0, 0, width, height)
     const maxSize = 1930
-    let quality
-    for (quality = 0.95; quality > 0; quality -= 0.01) {
+    for (let quality = 0.95; quality > 0; quality -= 0.01) {
       const promise = new Promise((resolve, reject) => {
         canvasRef.current.toBlob(
           blob => {
@@ -162,7 +165,7 @@
 
   function updateState (quality, blob, width, height) {
     // Need to do in separate function because of Buble
-    updateTourState(draft => {
+    updateAppState(draft => {
       draft.capture = {
         quality,
         blob,
