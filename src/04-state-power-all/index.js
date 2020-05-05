@@ -28,12 +28,7 @@ export default function StatePowerAll ({ appState }) {
   }
   return (
     <div>
-      <h2>StateMinerPower</h2>
-      <div>
-      (Total Network Power)
-      </div>
       {content}
-      (using Node #{selectedNode})
     </div>
   )
 }

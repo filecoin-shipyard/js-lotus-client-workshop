@@ -56,8 +56,7 @@ export default function ChainNotify ({ appState }) {
   }
   return (
     <div>
-      <h2>ChainNotify</h2>
-      <div>(using Node #{selectedNode})</div>
+      <h2>Chain</h2>
       {content}
     </div>
   )

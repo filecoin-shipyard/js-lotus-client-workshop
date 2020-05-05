@@ -30,8 +30,6 @@ export default function StatePowerMiners ({ appState }) {
 
   return (
     <div>
-      <h3>StateListMiners + StateMinerPower</h3>
-      <div>(using Node #{selectedNode})</div>
       <ul>
         {miners &&
           miners.map(miner => (

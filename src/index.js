@@ -13,6 +13,7 @@ import StatePowerAll from './04-state-power-all'
 import StateListMiners from './05-state-list-miners'
 import StatePowerMiners from './06-state-power-miners'
 import MakeDeal from './07-make-deal'
+import Home from './home'
 import './index.css'
 
 let initialState
@@ -27,6 +28,7 @@ function App () {
   const [appState, updateAppState] = useImmer(initialState)
   const [savedState, setSavedState] = useState()
   useTestgroundNet({ appState, updateAppState })
+  const { selectedNode } = appState
 
   useEffect(() => {
     const stateToSave = produce(appState, draft => {
@@ -50,14 +52,12 @@ function App () {
       <div>
         <nav style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Link to='/'>Home</Link>
-          <Link to='/select-node'>Select Node</Link>
-          <Link to='/chain-height'>Chain Height</Link>
-          <Link to='/miner-address'>Miner Address</Link>
-          <Link to='/chain-notify'>Chain Notify</Link>
-          <Link to='/state-power-all'>Power: All</Link>
-          <Link to='/state-list-miners'>List Miners</Link>
-          <Link to='/state-power-miners'>Power: Miners</Link>
-          <Link to='/make-deal'>Make a Deal</Link>
+          <Link to='/select-node'>Node: #{selectedNode}</Link>
+          <Link to='/chain-notify'>Chain</Link>
+          <Link to='/deals'>Deals</Link>
+          <Link to='/make-deal'>Camera</Link>
+          <Link to='/ipfs'>IPFS</Link>
+          <Link to='/miners'>Miners</Link>
         </nav>
         <ErrorBoundary>
           <Switch>
@@ -82,8 +82,17 @@ function App () {
             <Route path='/state-power-miners'>
               <StatePowerMiners {...baseProps} />
             </Route>
+            <Route path='/deals'>
+              <Deals {...baseProps} />
+            </Route>
             <Route path='/make-deal'>
               <MakeDeal {...baseProps} />
+            </Route>
+            <Route path='/ipfs'>
+              <IPFS {...baseProps} />
+            </Route>
+            <Route path='/miners'>
+              <Miners {...baseProps} />
             </Route>
             <Route path='/'>
               <Home />
@@ -95,8 +104,22 @@ function App () {
   )
 }
 
-function Home () {
-  return <h2>Home</h2>
+function IPFS () {
+  return <h1>IPFS</h1>
+}
+
+function Deals () {
+  return <h1>Deals</h1>
+}
+
+function Miners (props) {
+  return (
+    <div>
+      <h1>Miners</h1>
+      <StatePowerAll {...props} />
+      <StatePowerMiners {...props} />
+    </div>
+  )
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))
