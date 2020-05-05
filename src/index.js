@@ -33,9 +33,10 @@ function App () {
       delete draft.capture
       delete draft.stream
     })
-    if (stateToSave !== savedState) {
-      localStorage.setItem('state', JSON.stringify(stateToSave))
-      setSavedState(stateToSave)
+    const jsonStateToSave = JSON.stringify(stateToSave)
+    if (jsonStateToSave !== savedState) {
+      localStorage.setItem('state', jsonStateToSave)
+      setSavedState(jsonStateToSave)
     }
   }, [appState, savedState, setSavedState])
 

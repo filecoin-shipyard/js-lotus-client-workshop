@@ -18,13 +18,11 @@ export default function CaptureMedia ({ appState, updateAppState }) {
   }, [])
 
   const wrappedVideoRef = useCallback(node => {
-    console.log('Jim wrappedVideoRef1')
     if (videoRef.current) {
       videoRef.current.removeEventListener('canplay', canPlay)
       videoRef.current = null
     }
     if (node) {
-      console.log('Jim wrappedVideoRef2')
       videoRef.current = node
       node.addEventListener('canplay', canPlay)
     }
@@ -134,7 +132,6 @@ export default function CaptureMedia ({ appState, updateAppState }) {
     const videoTracks = stream.getVideoTracks()
     console.log('Got stream with constraints:', constraints)
     console.log(`Using video device: ${videoTracks[0].label}`)
-    console.log('Jim videoRef', videoRef.current, stream)
     videoRef.current.srcObject = stream
     updateAppState(draft => { draft.stream = stream })
     setOpened(true)
@@ -144,7 +141,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
     var context = canvasRef.current.getContext('2d')
     context.drawImage(videoRef.current, 0, 0, width, height)
     const maxSize = 1930
-    for (let quality = 0.95; quality > 0; quality -= 0.01) {
+    for (let quality = 0.95; quality > 0; quality -= 0.02) {
       const promise = new Promise((resolve, reject) => {
         canvasRef.current.toBlob(
           blob => {
