@@ -48,7 +48,7 @@ function App () {
   return (
     <Router>
       <div>
-        <nav style={{ display: 'flex' }}>
+        <nav style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Link to='/'>Home</Link>
           <Link to='/select-node'>Select Node</Link>
           <Link to='/chain-height'>Chain Height</Link>
