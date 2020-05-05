@@ -7,9 +7,8 @@ export default function SelectNode ({ appState, updateAppState }) {
 
   return (
     <div>
-      <h2>Select Node</h2>
+      <h2>Available Nodes</h2>
       <div>
-        Here are all the available miners. Pick any one you like:<br /><br />
         {available && available.map((miner, i) => (
           <div key={i}>
             <input

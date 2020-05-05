@@ -26,7 +26,6 @@ export default function ChainHead ({ appState }) {
   return (
     <div>
       <h2>Height</h2>
-      Let's get the block height (also called chain head): 
       <h1>{height}</h1>
       (using Node #{selectedNode})
     </div>

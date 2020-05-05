@@ -12,6 +12,7 @@ import ChainNotify from './03-chain-notify'
 import StatePowerAll from './04-state-power-all'
 import StateListMiners from './05-state-list-miners'
 import StatePowerMiners from './06-state-power-miners'
+import MakeDeal from './07-make-deal'
 import './index.css'
 
 let initialState
@@ -29,11 +30,13 @@ function App () {
 
   useEffect(() => {
     const stateToSave = produce(appState, draft => {
-      delete draft.ticker
+      delete draft.capture
+      delete draft.stream
     })
-    if (stateToSave !== savedState) {
-      localStorage.setItem('state', JSON.stringify(stateToSave))
-      setSavedState(stateToSave)
+    const jsonStateToSave = JSON.stringify(stateToSave)
+    if (jsonStateToSave !== savedState) {
+      localStorage.setItem('state', jsonStateToSave)
+      setSavedState(jsonStateToSave)
     }
   }, [appState, savedState, setSavedState])
 
@@ -45,7 +48,7 @@ function App () {
   return (
     <Router>
       <div>
-        <nav style={{ display: 'flex' }}>
+        <nav style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Link to='/'>Home</Link>
           <Link to='/select-node'>Select Node</Link>
           <Link to='/chain-height'>Chain Height</Link>
@@ -54,6 +57,7 @@ function App () {
           <Link to='/state-power-all'>Power: All</Link>
           <Link to='/state-list-miners'>List Miners</Link>
           <Link to='/state-power-miners'>Power: Miners</Link>
+          <Link to='/make-deal'>Make a Deal</Link>
         </nav>
         <ErrorBoundary>
           <Switch>
@@ -77,6 +81,9 @@ function App () {
             </Route>
             <Route path='/state-power-miners'>
               <StatePowerMiners {...baseProps} />
+            </Route>
+            <Route path='/make-deal'>
+              <MakeDeal {...baseProps} />
             </Route>
             <Route path='/'>
               <Home />
