@@ -143,11 +143,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
     var context = canvasRef.current.getContext('2d')
     context.drawImage(videoRef.current, 0, 0, width, height)
     const maxSize = 1930
-<<<<<<< HEAD
-    for (let quality = 0.95; quality > 0; quality -= 0.02) {
-=======
     for (let quality = 0.80; quality > 0; quality -= 0.05) {
->>>>>>> glitch
       const promise = new Promise((resolve, reject) => {
         canvasRef.current.toBlob(
           blob => {
