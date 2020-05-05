@@ -21,10 +21,10 @@ class BrowserProvider {
   }
 
   connect () {
-    if (this.transport !== 'ws') return
     if (!this.connectPromise) {
       const getConnectPromise = () => {
         return new Promise((resolve, reject) => {
+          if (this.transport !== 'ws') return resolve()
           this.ws = new WebSocket(this.url)
           // FIXME: reject on error or timeout
           this.ws.onopen = function () {
@@ -67,6 +67,7 @@ class BrowserProvider {
   }
 
   async sendHttp (jsonRpcRequest) {
+    await this.connect()
     const headers = {
       'Content-Type': 'text/plain;charset=UTF-8',
       Accept: '*/*'
@@ -149,11 +150,13 @@ class BrowserProvider {
             cancelledAt: Date.now(),
             closeCb: resolve
           })
-          this.sendWs({
-            jsonrpc: '2.0',
-            method: 'xrpc.cancel',
-            params: [json.id]
-          })
+          if (!this.destroyed) {
+            this.sendWs({
+              jsonrpc: '2.0',
+              method: 'xrpc.cancel',
+              params: [json.id]
+            })
+          }
         })
         // console.info(`Subscription ${json.id} cancelled, channel ${chanId} closed.`)
       }
@@ -212,6 +215,7 @@ class BrowserProvider {
   }
 
   async import (body) {
+    await this.connect()
     const headers = {
       'Content-Type': body.type,
       Accept: '*/*',

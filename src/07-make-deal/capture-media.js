@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import useLotusClient from '../lib/use-lotus-client'
 
 export default function CaptureMedia ({ appState, updateAppState }) {
+  const { selectedNode } = appState
+  const client = useLotusClient(selectedNode, 'node')
   const videoRef = useRef()
   const canvasRef = useRef()
-  const photoRef = useRef()
   const [opened, setOpened] = useState()
   const [height, setHeight] = useState(75)
-  const [objectUrlAttribute, setObjectUrlAttribute] = useState()
   const width = 100
   const stream = appState.stream
 
@@ -29,17 +30,6 @@ export default function CaptureMedia ({ appState, updateAppState }) {
   }, [canPlay])
 
   useEffect(() => {
-    if (appState.capture && appState.capture.blob) {
-      const objectUrl = URL.createObjectURL(appState.capture.blob)
-      setObjectUrlAttribute({ src: objectUrl })
-      return () => {
-        setObjectUrlAttribute(null)
-        URL.revokeObjectURL(objectUrl)
-      }
-    }
-  }, [appState.capture])
-
-  useEffect(() => {
     return () => {
       if (stream) {
         stream.getTracks().forEach(track => track.stop())
@@ -51,25 +41,17 @@ export default function CaptureMedia ({ appState, updateAppState }) {
     }
   }, [stream, updateAppState])
 
-  let sizePanel
-  if (appState.capture && appState.capture.blob) {
-    sizePanel = <span>{appState.capture.blob.size} bytes</span>
-  } else {
-    sizePanel = <span>No picture taken yet</span>
-  }
-
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        height: '90vh',
         justifyContent: 'space-around'
       }}
     >
       <h2 style={{ marginBottom: '1rem' }}>Capture</h2>
-      <div style={{ border: '1px solid green', height: height + 2 }}>
+      <div style={{ border: '1px solid green', height }}>
         <video
           ref={wrappedVideoRef}
           autoPlay
@@ -112,16 +94,6 @@ export default function CaptureMedia ({ appState, updateAppState }) {
           Take Picture
         </button>
       )}
-      <div style={{ border: '1px solid black', height: height + 2 }}>
-        <img
-          ref={photoRef}
-          width={width}
-          height={height}
-          alt=""
-          {...objectUrlAttribute}
-        />
-      </div>
-      <div>{sizePanel}</div>
     </div>
   )
 
@@ -156,22 +128,19 @@ export default function CaptureMedia ({ appState, updateAppState }) {
       })
       const blob = await promise
       if (blob.size <= maxSize) {
-        updateState(quality, blob, width, height)
+        const cid = await client.import(blob)
+        console.log('Imported', cid)
+        updateAppState(draft => {
+          draft.capture = {
+            quality,
+            blob,
+            width,
+            height,
+          }
+          draft.cid = cid
+        })
         break
       }
     }
-  }
-
-  function updateState (quality, blob, width, height) {
-    // Need to do in separate function because of Buble
-    updateAppState(draft => {
-      draft.capture = {
-        quality,
-        blob,
-        width,
-        height
-      }
-      delete draft.cid
-    })
   }
 }

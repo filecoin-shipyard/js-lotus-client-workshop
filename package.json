@@ -6,15 +6,16 @@
     "@filecoin-shipyard/lotus-client-provider-browser": "^0.0.4",
     "@filecoin-shipyard/lotus-client-rpc": "^0.0.4",
     "@filecoin-shipyard/lotus-client-schema": "^0.0.7",
+    "@openworklabs/filecoin-number": "^0.0.6",
     "concurrently": "^5.2.0",
     "express": "^4.17.1",
     "http-proxy-middleware": "^1.0.3",
     "immer": "^6.0.3",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.1",
-    "use-immer": "^0.4.0",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.1"
+    "use-immer": "^0.4.0"
   },
   "scripts": {
     "start": "npm run development",
@@ -42,7 +43,7 @@
     ]
   },
   "engines": {
-    "node": "13.x"  
+    "node": "13.x"
   },
   "license": "MIT"
 }
