@@ -12,7 +12,8 @@ import ChainNotify from './03-chain-notify'
 import StatePowerAll from './04-state-power-all'
 import StateListMiners from './05-state-list-miners'
 import StatePowerMiners from './06-state-power-miners'
-import MakeDeal from './07-make-deal'
+import Camera from './07-camera'
+import Deals from './08-deals'
 import Home from './home'
 import './index.css'
 
@@ -54,10 +55,12 @@ function App () {
           <Link to='/'>Home</Link>
           <Link to='/select-node'>Node: #{selectedNode}</Link>
           <Link to='/chain-notify'>Chain</Link>
-          <Link to='/deals'>Deals</Link>
-          <Link to='/make-deal'>Camera</Link>
-          <Link to='/ipfs'>IPFS</Link>
           <Link to='/miners'>Miners</Link>
+        </nav>
+        <nav style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <Link to='/store'>Store</Link>
+          <Link to='/retrieve'>Retrieve</Link>
+          <Link to='/deals'>My Deals</Link>
         </nav>
         <ErrorBoundary>
           <Switch>
@@ -85,14 +88,20 @@ function App () {
             <Route path='/deals'>
               <Deals {...baseProps} />
             </Route>
-            <Route path='/make-deal'>
-              <MakeDeal {...baseProps} />
+            <Route path='/camera'>
+              <Camera {...baseProps} />
             </Route>
             <Route path='/ipfs'>
               <IPFS {...baseProps} />
             </Route>
             <Route path='/miners'>
               <Miners {...baseProps} />
+            </Route>
+            <Route path='/store'>
+              <Store {...baseProps} />
+            </Route>
+            <Route path='/retrieve'>
+              <Retrieve {...baseProps} />
             </Route>
             <Route path='/'>
               <Home />
@@ -108,8 +117,31 @@ function IPFS () {
   return <h1>IPFS</h1>
 }
 
-function Deals () {
-  return <h1>Deals</h1>
+function Store () {
+  return (
+    <div>
+      <h1>Store</h1>
+      <ul>
+        <li>
+          <Link to='/camera'>From Camera</Link>
+        </li>
+        <li>
+          <Link to='/upload'>Upload File</Link>
+        </li>
+        <li>
+          <Link to='/ipfs'>From IPFS</Link>
+        </li>
+      </ul>
+    </div>
+  )
+}
+
+function Retrieve () {
+  return (
+    <div>
+      <h1>Retrieve</h1>
+    </div>
+  )
 }
 
 function Miners (props) {

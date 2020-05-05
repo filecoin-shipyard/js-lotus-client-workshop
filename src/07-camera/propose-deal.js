@@ -10,7 +10,7 @@ export default function ProposeDeal ({ appState, updateAppState }) {
   const [objectUrlAttribute, setObjectUrlAttribute] = useState()
   const [balance, setBalance] = useState()
   const [status, setStatus] = useState()
-  const cid = appState.cid
+  const { cid, importedNode } = appState
   const width = appState.capture.width
   const height = appState.capture.height
   const defaultWalletAddress = appState.defaultWalletAddress
@@ -60,12 +60,13 @@ export default function ProposeDeal ({ appState, updateAppState }) {
         </div>
         <div style={{ padding: '1rem' }}>
           <div>{appState.capture.blob.size} bytes</div>
-          <div>Uploaded to Node #{selectedNode}</div>
+          <div>Uploaded to Node #{importedNode}</div>
           <button
             onClick={() => {
               updateAppState(draft => {
                 delete draft.capture
                 delete draft.cid
+                delete draft.importedNode
               })
             }}
           >

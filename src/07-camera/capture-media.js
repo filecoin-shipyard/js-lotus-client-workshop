@@ -138,6 +138,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
             height,
           }
           draft.cid = cid
+          draft.importedNode = selectedNode
         })
         break
       }
