@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function DealList ({ appState, cid }) {
-  if (!appState.deals) return
+  if (!appState.deals) return null
 
   let deals = cid
     ? appState.deals.filter(deal => deal.cid === cid)
