@@ -5,28 +5,31 @@ export default function Home () {
   return (
     <div>
       <h2>Home</h2>
-
-      <ul>
-        <li>
-          <Link to='/chain-height'>Chain Height</Link>
-        </li>
-        <li>
-          <Link to='/miner-address'>Miner Address</Link>
-        </li>
-        <li>
-          <Link to='/chain-notify'>Chain Notify</Link>
-        </li>
-        <li>
-          <Link to='/state-power-all'>Power: All</Link>
-        </li>
-        <li>
-          <Link to='/state-list-miners'>List Miners</Link>
-        </li>
-        <li>
-          <Link to='/state-power-miners'>Power: Miners</Link>
-        </li>
-      </ul>
-
+      <p>
+        Welcome to the Ready Layer One "Build a JS web app for Filecoin Lotus"
+        workshop!
+      </p>
+      <p>
+        GitHub:{' '}
+        <a href='https://github.com/filecoin-shipyard/rl1-lotus-workshop'>
+          filecoin-shipyard/rl1-lotus-workshop
+        </a>
+      </p>
+      <p>
+        This example web app connects to a short-lived Filecoin** network built
+        specifically for this workshop running 12 nodes + miners.
+      </p>
+      <p>
+        <bold>**Disclaimer**</bold> The network is running untested, development
+        code with 2048 byte sectors. It is not representative of production. You
+        may encounter some known bugs and configuration issues that won't be
+        present in the upcoming testnet and mainnet networks. The network that
+        is used for this workshop will change and may disappear after the
+        workshop, but we will not be keeping this code updated to match.
+      </p>
+      <p>
+        Looking for <Link to="/examples">simpler code examples</Link>?
+      </p>
     </div>
   )
 }

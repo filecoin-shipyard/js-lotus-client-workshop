@@ -103,6 +103,9 @@ function App () {
             <Route path='/retrieve'>
               <Retrieve {...baseProps} />
             </Route>
+            <Route path='/examples'>
+              <Examples {...baseProps} />
+            </Route>
             <Route path='/'>
               <Home />
             </Route>
@@ -150,6 +153,34 @@ function Miners (props) {
       <h1>Miners</h1>
       <StatePowerAll {...props} />
       <StatePowerMiners {...props} />
+    </div>
+  )
+}
+
+function Examples () {
+  return (
+    <div>
+      <h1>Code Examples</h1>
+      <ul>
+        <li>
+          <Link to='/chain-height'>Chain Height</Link>
+        </li>
+        <li>
+          <Link to='/miner-address'>Miner Address</Link>
+        </li>
+        <li>
+          <Link to='/chain-notify'>Chain Notify</Link>
+        </li>
+        <li>
+          <Link to='/state-power-all'>Power: All</Link>
+        </li>
+        <li>
+          <Link to='/state-list-miners'>List Miners</Link>
+        </li>
+        <li>
+          <Link to='/state-power-miners'>Power: Miners</Link>
+        </li>
+      </ul>
     </div>
   )
 }
