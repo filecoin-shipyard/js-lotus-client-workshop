@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { FilecoinNumber } from '@openworklabs/filecoin-number'
 import useLotusClient from '../lib/use-lotus-client'
 import useMiners from '../lib/use-miners'
+import DealList from '../08-deals/deal-list'
 
 export default function ProposeDeal ({ appState, updateAppState }) {
   const { selectedNode } = appState
@@ -102,6 +103,7 @@ export default function ProposeDeal ({ appState, updateAppState }) {
           })}
       </div>
       <div>{status}</div>
+      <DealList appState={appState} updateAppState={updateAppState} cid={cid} />
     </div>
   )
 
@@ -124,9 +126,22 @@ export default function ProposeDeal ({ appState, updateAppState }) {
     try {
       const result = await client.clientStartDeal(dataRef)
       const { '/': proposalCid } = result
-      setStatus('Proposed: ' + proposalCid)
+      setStatus('Proposed deal.')
       updateAppState(draft => {
         draft.proposalCid = proposalCid
+        if (!draft.deals) {
+          draft.deals = []
+        }
+        draft.deals.push({
+          type: 'camera',
+          proposalCid,
+          date: Date.now(),
+          fromNode: selectedNode,
+          miner: targetMiner,
+          cid
+          // FIXME: Block height
+          // FIXME: Local blob, size
+        })
       })
     } catch (e) {
       setStatus('Error: ' + e.message)

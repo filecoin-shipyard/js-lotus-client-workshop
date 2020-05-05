@@ -100,6 +100,9 @@ function App () {
             <Route path='/store'>
               <Store {...baseProps} />
             </Route>
+            <Route path='/upload'>
+              <Upload {...baseProps} />
+            </Route>
             <Route path='/retrieve'>
               <Retrieve {...baseProps} />
             </Route>
@@ -118,6 +121,10 @@ function App () {
 
 function IPFS () {
   return <h1>IPFS</h1>
+}
+
+function Upload () {
+  return <h1>Upload a File</h1>
 }
 
 function Store () {
