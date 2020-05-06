@@ -5,6 +5,7 @@ import ErrorBoundary from './error-boundary.js'
 import { useImmer } from 'use-immer'
 import produce from 'immer'
 import useTestgroundNet from './lib/use-testground-net'
+import useDealMonitor from './lib/use-deal-monitor'
 import SelectNode from './00-select-node'
 import ChainHeight from './01-chain-height'
 import MinerAddress from './02-miner-address'
@@ -42,6 +43,8 @@ function App () {
       setSavedState(jsonStateToSave)
     }
   }, [appState, savedState, setSavedState])
+
+  useDealMonitor({ appState, updateAppState })
 
   const baseProps = {
     appState,

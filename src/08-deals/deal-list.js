@@ -1,7 +1,30 @@
 import React from 'react'
 
+const dealStateNames = [
+  // go-fil-markets/storagemarket/types.go
+  'StorageDealUnknown', // 0
+  'StorageDealProposalNotFound', // 1
+  'StorageDealProposalRejected', // 2
+  'StorageDealProposalAccepted', // 3
+  'StorageDealStaged', // 4
+  'StorageDealSealing', // 5
+  'StorageDealActive', // 6
+  'StorageDealFailing', // 7
+  'StorageDealNotFound', // 8
+
+  'StorageDealFundsEnsured', // 9
+  'StorageDealValidating', // 10
+  'StorageDealTransferring', // 11
+  'StorageDealWaitingForData', // 12
+  'StorageDealVerifyData', // 13
+  'StorageDealPublishing', // 14
+  'StorageDealError', // 15
+  'StorageDealCompleted' // 16
+]
+
 export default function DealList ({ appState, cid }) {
   if (!appState.deals) return null
+  const { dealStates } = appState
 
   let deals = cid
     ? appState.deals.filter(deal => deal.cid === cid)
@@ -10,17 +33,26 @@ export default function DealList ({ appState, cid }) {
 
   return (
     <div>
-      {deals.map(deal => (
-        <div>
-          #{deal.fromNode} -> {deal.miner} <br />
-          <div style={{ fontSize: '50%' }}>
-            Date: {new Date(deal.date).toString()} <br />
-            CID: {deal.cid} <br />
-            Proposal CID: {deal.proposalCid} <br />
-            Type: {deal.type}
+      {deals.map(deal => {
+        const { proposalCid, fromNode, miner, date, cid, type } = deal
+        const dealState =
+          dealStates && dealStates[proposalCid] && dealStates[proposalCid].State
+        const dealMessage =
+          dealStates && dealStates[proposalCid] && dealStates[proposalCid].Message
+        return (
+          <div key={proposalCid}>
+            #{fromNode} -> {miner} <br />
+            <div style={{ fontSize: '50%' }}>
+              Date: {new Date(date).toString()} <br />
+              CID: {cid} <br />
+              Proposal CID: {proposalCid} <br />
+              Type: {type} <br />
+              State: {dealStates && dealStateNames[dealState]} <br />
+              Message: {dealMessage}
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 }
