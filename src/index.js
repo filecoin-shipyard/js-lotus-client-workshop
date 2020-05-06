@@ -12,7 +12,9 @@ import ChainNotify from './03-chain-notify'
 import StatePowerAll from './04-state-power-all'
 import StateListMiners from './05-state-list-miners'
 import StatePowerMiners from './06-state-power-miners'
-import MakeDeal from './07-make-deal'
+import Camera from './07-camera'
+import Deals from './08-deals'
+import Home from './home'
 import './index.css'
 
 let initialState
@@ -27,6 +29,7 @@ function App () {
   const [appState, updateAppState] = useImmer(initialState)
   const [savedState, setSavedState] = useState()
   useTestgroundNet({ appState, updateAppState })
+  const { selectedNode } = appState
 
   useEffect(() => {
     const stateToSave = produce(appState, draft => {
@@ -50,14 +53,14 @@ function App () {
       <div>
         <nav style={{ display: 'flex', flexWrap: 'wrap' }}>
           <Link to='/'>Home</Link>
-          <Link to='/select-node'>Select Node</Link>
-          <Link to='/chain-height'>Chain Height</Link>
-          <Link to='/miner-address'>Miner Address</Link>
-          <Link to='/chain-notify'>Chain Notify</Link>
-          <Link to='/state-power-all'>Power: All</Link>
-          <Link to='/state-list-miners'>List Miners</Link>
-          <Link to='/state-power-miners'>Power: Miners</Link>
-          <Link to='/make-deal'>Make a Deal</Link>
+          <Link to='/select-node'>Node: #{selectedNode}</Link>
+          <Link to='/chain-notify'>Chain</Link>
+          <Link to='/miners'>Miners</Link>
+        </nav>
+        <nav style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <Link to='/store'>Store</Link>
+          <Link to='/retrieve'>Retrieve</Link>
+          <Link to='/deals'>My Deals</Link>
         </nav>
         <ErrorBoundary>
           <Switch>
@@ -82,8 +85,29 @@ function App () {
             <Route path='/state-power-miners'>
               <StatePowerMiners {...baseProps} />
             </Route>
-            <Route path='/make-deal'>
-              <MakeDeal {...baseProps} />
+            <Route path='/deals'>
+              <Deals {...baseProps} />
+            </Route>
+            <Route path='/camera'>
+              <Camera {...baseProps} />
+            </Route>
+            <Route path='/ipfs'>
+              <IPFS {...baseProps} />
+            </Route>
+            <Route path='/miners'>
+              <Miners {...baseProps} />
+            </Route>
+            <Route path='/store'>
+              <Store {...baseProps} />
+            </Route>
+            <Route path='/upload'>
+              <Upload {...baseProps} />
+            </Route>
+            <Route path='/retrieve'>
+              <Retrieve {...baseProps} />
+            </Route>
+            <Route path='/examples'>
+              <Examples {...baseProps} />
             </Route>
             <Route path='/'>
               <Home />
@@ -95,8 +119,77 @@ function App () {
   )
 }
 
-function Home () {
-  return <h2>Home</h2>
+function IPFS () {
+  return <h1>IPFS</h1>
+}
+
+function Upload () {
+  return <h1>Upload a File</h1>
+}
+
+function Store () {
+  return (
+    <div>
+      <h1>Store</h1>
+      <ul>
+        <li>
+          <Link to='/camera'>From Camera</Link>
+        </li>
+        <li>
+          <Link to='/upload'>Upload File</Link>
+        </li>
+        <li>
+          <Link to='/ipfs'>From IPFS</Link>
+        </li>
+      </ul>
+    </div>
+  )
+}
+
+function Retrieve () {
+  return (
+    <div>
+      <h1>Retrieve</h1>
+    </div>
+  )
+}
+
+function Miners (props) {
+  return (
+    <div>
+      <h1>Miners</h1>
+      <StatePowerAll {...props} />
+      <StatePowerMiners {...props} />
+    </div>
+  )
+}
+
+function Examples () {
+  return (
+    <div>
+      <h1>Code Examples</h1>
+      <ul>
+        <li>
+          <Link to='/chain-height'>Chain Height</Link>
+        </li>
+        <li>
+          <Link to='/miner-address'>Miner Address</Link>
+        </li>
+        <li>
+          <Link to='/chain-notify'>Chain Notify</Link>
+        </li>
+        <li>
+          <Link to='/state-power-all'>Power: All</Link>
+        </li>
+        <li>
+          <Link to='/state-list-miners'>List Miners</Link>
+        </li>
+        <li>
+          <Link to='/state-power-miners'>Power: Miners</Link>
+        </li>
+      </ul>
+    </div>
+  )
 }
 
 ReactDOM.render(<App />, document.getElementById('root'))

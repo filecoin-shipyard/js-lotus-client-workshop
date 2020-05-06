@@ -9,6 +9,7 @@ export default function SelectNode ({ appState, updateAppState }) {
     <div>
       <h2>Available Nodes</h2>
       <div>
+        Which node would you like to be?<br/><br/>
         {available && available.map((miner, i) => (
           <div key={i}>
             <input
@@ -18,7 +19,7 @@ export default function SelectNode ({ appState, updateAppState }) {
               checked={i === selectedNode}
               onChange={selectNode}
             />
-            #{i}: {miner}
+            #{i}
           </div>
         ))}
       </div>

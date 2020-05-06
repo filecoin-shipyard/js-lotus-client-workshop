@@ -45,19 +45,18 @@ export default function ChainNotify ({ appState }) {
           .slice(0, rounds.length - 1)
           .map(round => {
             const { height, miners } = round
-            return <div key={height} style={{marginBottom: '2rem', color: 'gray'}}>{height}: {miners.join(' ')}</div>
+            return <div key={height} style={{marginBottom: '2rem', color: 'gray'}}>Block {height}: mined by {miners.join(' ')}</div>
           })}
         {rounds.slice(-1).map(round => {
           const { height, miners } = round
-          return <div key={height} ref={lastEl}>{height}: {miners.join(' ')}</div>
+          return <div key={height} ref={lastEl}>Block {height}: mined by {miners.join(' ')}</div>
         })}
       </div>
     )
   }
   return (
     <div>
-      <h2>ChainNotify</h2>
-      <div>(using Node #{selectedNode})</div>
+      <h2>Chain</h2>
       {content}
     </div>
   )
