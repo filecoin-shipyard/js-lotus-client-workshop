@@ -61,7 +61,7 @@ function App () {
           <Link to='/miners'>Miners</Link>
         </nav>
         <nav style={{ display: 'flex', flexWrap: 'wrap' }}>
-          <Link to='/store'>Store</Link>
+          <Link to='/camera'>Store: Camera</Link>
           <Link to='/retrieve'>Retrieve</Link>
           <Link to='/deals'>My Deals</Link>
         </nav>
