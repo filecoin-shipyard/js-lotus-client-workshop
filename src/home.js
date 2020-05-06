@@ -10,14 +10,14 @@ export default function Home () {
         workshop!
       </p>
       <p>
+        This example web app connects to a short-lived Filecoin** development
+        network, running 12 nodes + miners specifically for this workshop.
+      </p>
+      <p>
         GitHub:{' '}
         <a href='https://github.com/filecoin-shipyard/rl1-lotus-workshop'>
           filecoin-shipyard/rl1-lotus-workshop
         </a>
-      </p>
-      <p>
-        This example web app connects to a short-lived Filecoin** network built
-        specifically for this workshop running 12 nodes + miners.
       </p>
       <p>
         <b>**Disclaimer**</b> The network is running untested, development
