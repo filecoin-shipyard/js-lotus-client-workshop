@@ -34,7 +34,7 @@ export default function DealList ({ appState, cid }) {
   return (
     <div>
       {deals.map(deal => {
-        const { proposalCid, fromNode, miner, date, cid, type } = deal
+        const { proposalCid, fromNode, miner, date, cid: cidDeal, type } = deal
         const dealState =
           dealStates && dealStates[proposalCid] && dealStates[proposalCid].State
         const dealMessage =
@@ -44,7 +44,7 @@ export default function DealList ({ appState, cid }) {
             #{fromNode} -> {miner} <br />
             <div style={{ fontSize: '50%' }}>
               Date: {new Date(date).toString()} <br />
-              CID: {cid} <br />
+              {!cid && <>CID: {cidDeal} <br /></>}
               Proposal CID: {proposalCid} <br />
               Type: {type} <br />
               State: {dealStates && dealStateNames[dealState]} <br />
