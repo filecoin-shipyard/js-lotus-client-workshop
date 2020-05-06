@@ -32,7 +32,7 @@ class BrowserProvider {
           }
           this.ws.onerror = function () {
             console.error('ws error')
-            reject()
+            reject(new Error('websocket error'))
           }
           this.ws.onmessage = this.receive.bind(this)
         })

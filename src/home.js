@@ -20,7 +20,7 @@ export default function Home () {
         </a>
       </p>
       <p>
-        <bold>**Disclaimer**</bold> The network is running untested, development
+        <b>**Disclaimer**</b> The network is running untested, development
         code with 2048 byte sectors. It is not representative of production. You
         may encounter some known bugs and configuration issues that won't be
         present in the upcoming testnet and mainnet networks. The network that

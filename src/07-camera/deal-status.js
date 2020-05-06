@@ -5,24 +5,24 @@
   const marketDeal = tourState.marketDeal
 
   const dealStates = [ // go-fil-markets/storagemarket/types.go
-    "StorageDealUnknown",
-    "StorageDealProposalNotFound",
-    "StorageDealProposalRejected",
-    "StorageDealProposalAccepted",
-    "StorageDealStaged",
-    "StorageDealSealing",
-    "StorageDealActive",
-    "StorageDealFailing",
-    "StorageDealNotFound",
+    "StorageDealUnknown", // 0
+    "StorageDealProposalNotFound", // 1
+    "StorageDealProposalRejected", // 2
+    "StorageDealProposalAccepted", // 3
+    "StorageDealStaged", // 4
+    "StorageDealSealing", // 5
+    "StorageDealActive", // 6
+    "StorageDealFailing", // 7
+    "StorageDealNotFound", // 8
 
-    "StorageDealFundsEnsured",
-    "StorageDealValidating",
-    "StorageDealTransferring",
-    "StorageDealWaitingForData",
-    "StorageDealVerifyData",
-    "StorageDealPublishing",
-    "StorageDealError",
-    "StorageDealCompleted"
+    "StorageDealFundsEnsured", // 9
+    "StorageDealValidating", // 10
+    "StorageDealTransferring", // 11
+    "StorageDealWaitingForData", // 12
+    "StorageDealVerifyData", // 13
+    "StorageDealPublishing", // 14
+    "StorageDealError", // 15
+    "StorageDealCompleted" // 16
   ]
   useEffect(() => {
     let state = { canceled: false }

@@ -8,6 +8,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
   const canvasRef = useRef()
   const [opened, setOpened] = useState()
   const [height, setHeight] = useState(75)
+  const [error, setError] = useState()
   const width = 100
   const stream = appState.stream
 
@@ -18,16 +19,19 @@ export default function CaptureMedia ({ appState, updateAppState }) {
     setHeight(height)
   }, [])
 
-  const wrappedVideoRef = useCallback(node => {
-    if (videoRef.current) {
-      videoRef.current.removeEventListener('canplay', canPlay)
-      videoRef.current = null
-    }
-    if (node) {
-      videoRef.current = node
-      node.addEventListener('canplay', canPlay)
-    }
-  }, [canPlay])
+  const wrappedVideoRef = useCallback(
+    node => {
+      if (videoRef.current) {
+        videoRef.current.removeEventListener('canplay', canPlay)
+        videoRef.current = null
+      }
+      if (node) {
+        videoRef.current = node
+        node.addEventListener('canplay', canPlay)
+      }
+    },
+    [canPlay]
+  )
 
   useEffect(() => {
     return () => {
@@ -40,6 +44,8 @@ export default function CaptureMedia ({ appState, updateAppState }) {
       }
     }
   }, [stream, updateAppState])
+
+  if (error) throw error
 
   return (
     <div
@@ -107,7 +113,9 @@ export default function CaptureMedia ({ appState, updateAppState }) {
     console.log('Got stream with constraints:', constraints)
     console.log(`Using video device: ${videoTracks[0].label}`)
     videoRef.current.srcObject = stream
-    updateAppState(draft => { draft.stream = stream })
+    updateAppState(draft => {
+      draft.stream = stream
+    })
     setOpened(true)
   }
 
@@ -115,7 +123,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
     var context = canvasRef.current.getContext('2d')
     context.drawImage(videoRef.current, 0, 0, width, height)
     const maxSize = 1930
-    for (let quality = 0.80; quality > 0; quality -= 0.05) {
+    for (let quality = 0.8; quality > 0; quality -= 0.05) {
       const promise = new Promise((resolve, reject) => {
         canvasRef.current.toBlob(
           blob => {
@@ -128,18 +136,23 @@ export default function CaptureMedia ({ appState, updateAppState }) {
       })
       const blob = await promise
       if (blob.size <= maxSize) {
-        const cid = await client.import(blob)
-        console.log('Imported', cid)
-        updateAppState(draft => {
-          draft.capture = {
-            quality,
-            blob,
-            width,
-            height,
-          }
-          draft.cid = cid
-          draft.importedNode = selectedNode
-        })
+        try {
+          const cid = await client.import(blob)
+          console.log('Imported', cid)
+          updateAppState(draft => {
+            draft.capture = {
+              quality,
+              blob,
+              width,
+              height
+            }
+            draft.cid = cid
+            draft.importedNode = selectedNode
+          })
+        } catch (e) {
+          console.error('Import error', e)
+          setError(e)
+        }
         break
       }
     }
