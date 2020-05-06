@@ -98,7 +98,7 @@ export default function DealList ({ client, appState, cid }) {
         const clientDealStatus = data && data.clientDealStatus
         const dealState = clientDealStatus && clientDealStatus.State
         const dealMessage = clientDealStatus && clientDealStatus.Message
-        const dealHistoryData = dealHistory[proposalCid]
+        const dealHistoryData = dealHistory && dealHistory[proposalCid]
         return (
           <div key={proposalCid} style={{ marginBottom: '1rem' }}>
             <div>
