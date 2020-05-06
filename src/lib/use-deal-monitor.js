@@ -38,17 +38,19 @@ export default function useDealMonitor ({ appState, updateAppState }) {
       const now = Date.now()
       for (const deal of deals) {
         const { proposalCid, date, fromNode } = deal
+        /*
         console.log(
           'Checking deal',
           terminated[proposalCid] && 'Terminated',
           deal
         )
+        */
         if (date + expireAfter > now && !terminated[proposalCid]) {
           checkSet.add(fromNode)
         }
       }
     }
-    console.log('checkSet', checkSet)
+    // console.log('checkSet', checkSet)
 
     return checkSet
   }, [deals, terminated])
@@ -60,7 +62,7 @@ export default function useDealMonitor ({ appState, updateAppState }) {
       if (nodes.length > 0) {
         for (const node of nodes) {
           if (state.canceled) return
-          console.log('Checking node', node)
+          // console.log('Checking node', node)
           setCurrentNode(node)
           setTicker(Date.now())
           await new Promise(resolve => setTimeout(resolve, interval))
@@ -80,13 +82,13 @@ export default function useDealMonitor ({ appState, updateAppState }) {
     let state = { canceled: false }
     if (!client) return
     async function run () {
-      console.log('Worker', client)
+      // console.log('Worker', client)
       if (state.canceled) return
       try {
         const clientDeals = await client.clientListDeals()
-        console.log('Jim clientListDeals', clientDeals)
+        // console.log('Jim clientListDeals', clientDeals)
         for (const deal of clientDeals) {
-          console.log('Deal', deal)
+          // console.log('Deal', deal)
           const {
             ProposalCid: { '/': proposalCid }
           } = deal
