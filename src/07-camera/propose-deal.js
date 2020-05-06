@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { FilecoinNumber } from '@openworklabs/filecoin-number'
+import copy from 'clipboard-copy'
 import useLotusClient from '../lib/use-lotus-client'
 import useMiners from '../lib/use-miners'
 import DealList from '../08-deals/deal-list'
@@ -80,7 +81,8 @@ export default function ProposeDeal ({ appState, updateAppState }) {
         <div>
           CID:{' '}
           <span style={{ fontSize: '70%' }}>
-            {cid}
+            {cid} {' '}
+            {cid && <button onClick={copyCid}>Copy</button>}
             <br />
           </span>
           <span style={{ fontSize: '70%' }}>
@@ -125,6 +127,12 @@ export default function ProposeDeal ({ appState, updateAppState }) {
       />
     </div>
   )
+
+  async function copyCid () {
+    console.log('Copying to clipboard', cid)
+    await copy(cid)
+    console.log('Copied.')
+  }
 
   async function proposeDeal (targetMiner) {
     const dataRef = {

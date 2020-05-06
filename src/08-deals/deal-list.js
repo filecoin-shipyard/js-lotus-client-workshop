@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { format, formatDistance } from 'date-fns'
+import copy from 'clipboard-copy'
 
 const dealStateNames = [
   // go-fil-markets/storagemarket/types.go
@@ -106,7 +107,7 @@ export default function DealList ({ client, appState, cid }) {
             <div style={{ fontSize: '50%' }}>
               <div>Date: {new Date(date).toString()}</div>
               <div>Type: {type}</div>
-              {!cid && <div>CID: {cidDeal} </div>}
+              {!cid && <div>CID: {cidDeal} <button onClick={copyCid}>Copy</button></div>}
               <div>Proposal CID: {proposalCid}</div>
               <div>State: {dealData && dealStateNames[dealState]}</div>
               <div>
@@ -118,6 +119,12 @@ export default function DealList ({ client, appState, cid }) {
             <DealHistory dealHistoryData={dealHistoryData} height={height} />
           </div>
         )
+
+        async function copyCid () {
+          console.log('Copying to clipboard', cidDeal)
+          await copy(cidDeal)
+          console.log('Copied.')
+        }
       })}
     </div>
   )
