@@ -14,7 +14,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
 
   const canPlay = useCallback(ev => {
     const video = videoRef.current
-    console.log('canplay', ev, video.videoWidth, video.videoHeight)
+    // console.log('canplay', ev, video.videoWidth, video.videoHeight)
     const height = video.videoHeight / (video.videoWidth / width)
     setHeight(height)
   }, [])

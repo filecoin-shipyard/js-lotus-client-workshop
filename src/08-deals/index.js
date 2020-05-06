@@ -1,8 +1,10 @@
 import React from 'react'
 import DealList from './deal-list'
+import useLotusClient from '../lib/use-lotus-client'
 
 export default function Deals ({ appState, updateAppState }) {
-  const { deals } = appState
+  const { deals, selectedNode } = appState
+  const client = useLotusClient(selectedNode, 'node')
   return (
     <div>
       <h1>Deals</h1>
@@ -14,14 +16,15 @@ export default function Deals ({ appState, updateAppState }) {
           Clear
         </button>
       )}
-      <DealList appState={appState} />
+      <DealList client={client} appState={appState} />
     </div>
   )
 
   function clearAll () {
     updateAppState(draft => {
       draft.deals = []
-      draft.dealStates = {}
+      draft.dealData = {}
+      draft.dealHistory = {}
     })
   }
 }

@@ -15,7 +15,7 @@ const terminalStates = new Set([
 ])
 
 export default function useDealMonitor ({ appState, updateAppState }) {
-  const { deals, dealStates } = appState
+  const { deals, dealData } = appState
   const [currentNode, setCurrentNode] = useState(0)
   const [ticker, setTicker] = useState(0)
   const [terminated, updateTerminated] = useImmer({})
@@ -23,16 +23,19 @@ export default function useDealMonitor ({ appState, updateAppState }) {
 
   useEffect(() => {
     updateTerminated(draft => {
-      if (!dealStates) return
-      for (const { ProposalCid: proposalCid, State: state } in dealStates) {
+      if (!dealData) return
+      for (const proposalCid in dealData) {
+        const { clientDealStatus } = dealData[proposalCid]
+        const { State: state } = clientDealStatus
         if (terminalStates.has(state)) {
           draft[proposalCid] = true
         }
       }
     })
-  }, [dealStates, updateTerminated])
+  }, [dealData, updateTerminated])
 
   const checkSet = useMemo(() => {
+    // console.log('Jim terminated', terminated)
     const checkSet = new Set()
     if (deals) {
       const now = Date.now()
@@ -85,6 +88,9 @@ export default function useDealMonitor ({ appState, updateAppState }) {
       // console.log('Worker', client)
       if (state.canceled) return
       try {
+        const now = Date.now()
+        const { Height: height } = await client.chainHead()
+        if (state.canceled) return
         const clientDeals = await client.clientListDeals()
         // console.log('Jim clientListDeals', clientDeals)
         for (const deal of clientDeals) {
@@ -93,10 +99,30 @@ export default function useDealMonitor ({ appState, updateAppState }) {
             ProposalCid: { '/': proposalCid }
           } = deal
           updateAppState(draft => {
-            if (!draft.dealStates) {
-              draft.dealStates = {}
+            if (!draft.dealData) {
+              draft.dealData = {}
             }
-            draft.dealStates[proposalCid] = deal
+            draft.dealData[proposalCid] = {
+              clientDealStatus: deal,
+              updatedAtHeight: height,
+              updatedAtTime: now
+            }
+            if (!draft.dealHistory) {
+              draft.dealHistory = {}
+            }
+            if (!draft.dealHistory[proposalCid]) {
+              draft.dealHistory[proposalCid] = []
+            }
+            const dealHistory = draft.dealHistory[proposalCid]
+            let previous =
+              dealHistory.length > 0
+                ? dealHistory[dealHistory.length - 1]
+                : [null, null, null]
+            const previousState = previous[0]
+            const currentState = deal.State
+            if (currentState !== previousState) {
+              dealHistory.push([currentState, height, now])
+            }
           })
         }
       } catch (e) {

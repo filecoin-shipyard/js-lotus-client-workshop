@@ -1,30 +1,88 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { format, formatDistance } from 'date-fns'
 
 const dealStateNames = [
   // go-fil-markets/storagemarket/types.go
-  'StorageDealUnknown', // 0
-  'StorageDealProposalNotFound', // 1
-  'StorageDealProposalRejected', // 2
-  'StorageDealProposalAccepted', // 3
-  'StorageDealStaged', // 4
-  'StorageDealSealing', // 5
-  'StorageDealActive', // 6
-  'StorageDealFailing', // 7
-  'StorageDealNotFound', // 8
+  'Unknown', // 0
+  'ProposalNotFound', // 1
+  'ProposalRejected', // 2
+  'ProposalAccepted', // 3
+  'Staged', // 4
+  'Sealing', // 5
+  'Active', // 6
+  'Failing', // 7
+  'NotFound', // 8
 
-  'StorageDealFundsEnsured', // 9
-  'StorageDealValidating', // 10
-  'StorageDealTransferring', // 11
-  'StorageDealWaitingForData', // 12
-  'StorageDealVerifyData', // 13
-  'StorageDealPublishing', // 14
-  'StorageDealError', // 15
-  'StorageDealCompleted' // 16
+  'FundsEnsured', // 9
+  'Validating', // 10
+  'Transferring', // 11
+  'WaitingForData', // 12
+  'VerifyData', // 13
+  'Publishing', // 14
+  'Error', // 15
+  'Completed' // 16
 ]
 
-export default function DealList ({ appState, cid }) {
+function DealHistory ({ dealHistoryData, height }) {
+  if (!dealHistoryData || !height) return null
+  const now = Date.now()
+
+  return (
+    <table style={{ fontSize: '70%' }}>
+      <tbody>
+        {dealHistoryData.map((record, i) => {
+          return (
+            <tr key={i}>
+              <td>{dealStateNames[record[0]]}</td>
+              <td>{blocks(i)}</td>
+              <td>{timeElapsed(i)}</td>
+            </tr>
+          )
+        })}
+      </tbody>
+    </table>
+  )
+
+  function blocks (i) {
+    const start = dealHistoryData[i][1]
+    const end =
+      i < dealHistoryData.length - 1 ? dealHistoryData[i + 1][1] : height
+    return `${start} (${end - start} blocks)`
+  }
+
+  function timeElapsed (i) {
+    const start = dealHistoryData[i][2]
+    const end = i < dealHistoryData.length - 1 ? dealHistoryData[i + 1][2] : now
+    return (
+      `${format(start, 'kk:mm:ss')} ` +
+      `(${formatDistance(start, end, { includeSeconds: true })})`
+    )
+  }
+}
+
+export default function DealList ({ client, appState, cid }) {
+  const [now, setNow] = useState(Date.now())
+  const [height, setHeight] = useState()
+
+  useEffect(() => {
+    const state = { canceled: false }
+    if (!client) return
+    async function run () {
+      if (state.canceled) return
+      const { Height: height } = await client.chainHead()
+      if (state.canceled) return
+      setHeight(height)
+      setNow(Date.now())
+      setTimeout(run, 1000)
+    }
+    run()
+    return () => {
+      state.canceled = true
+    }
+  }, [client])
+
   if (!appState.deals) return null
-  const { dealStates } = appState
+  const { dealData, dealHistory } = appState
 
   let deals = cid
     ? appState.deals.filter(deal => deal.cid === cid)
@@ -35,21 +93,29 @@ export default function DealList ({ appState, cid }) {
     <div>
       {deals.map(deal => {
         const { proposalCid, fromNode, miner, date, cid: cidDeal, type } = deal
-        const dealState =
-          dealStates && dealStates[proposalCid] && dealStates[proposalCid].State
-        const dealMessage =
-          dealStates && dealStates[proposalCid] && dealStates[proposalCid].Message
+        const data = dealData && dealData[proposalCid]
+        const clientDealStatus = data && data.clientDealStatus
+        const dealState = clientDealStatus && clientDealStatus.State
+        const dealMessage = clientDealStatus && clientDealStatus.Message
+        const dealHistoryData = dealHistory[proposalCid]
         return (
-          <div key={proposalCid}>
-            #{fromNode} -> {miner} <br />
-            <div style={{ fontSize: '50%' }}>
-              Date: {new Date(date).toString()} <br />
-              {!cid && <>CID: {cidDeal} <br /></>}
-              Proposal CID: {proposalCid} <br />
-              Type: {type} <br />
-              State: {dealStates && dealStateNames[dealState]} <br />
-              Message: {dealMessage}
+          <div key={proposalCid} style={{ marginBottom: '1rem' }}>
+            <div>
+              Node #{fromNode} -> Miner {miner}
             </div>
+            <div style={{ fontSize: '50%' }}>
+              <div>Date: {new Date(date).toString()}</div>
+              <div>Type: {type}</div>
+              {!cid && <div>CID: {cidDeal} </div>}
+              <div>Proposal CID: {proposalCid}</div>
+              <div>State: {dealData && dealStateNames[dealState]}</div>
+              <div>
+                Last update:{' '}
+                {data && formatDistance(data.updatedAtTime, now) + ' ago'}
+              </div>
+              {dealMessage && <div>Message: {dealMessage}</div>}
+            </div>
+            <DealHistory dealHistoryData={dealHistoryData} height={height} />
           </div>
         )
       })}
