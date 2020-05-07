@@ -20,15 +20,15 @@ export default function Home () {
         </a>
       </p>
       <p>
-        <b>**Disclaimer**</b> The network is running untested, development
-        code with 2048 byte sectors. It is not representative of production. You
-        may encounter some known bugs and configuration issues that won't be
-        present in the upcoming testnet and mainnet networks. The network that
-        is used for this workshop will change and may disappear after the
-        workshop, but we will not be keeping this code updated to match.
+        <b>**Disclaimer**</b> The network is running untested, development code
+        with 2048 byte sectors. It is not representative of production. You may
+        encounter many known bugs and configuration issues that won't be present
+        in the upcoming testnet and mainnet networks. The network that is used
+        for this workshop will soon disappear. We will not be keeping this code
+        updated.
       </p>
       <p>
-        Looking for <Link to="/examples">simpler code examples</Link>?
+        Looking for <Link to='/examples'>simpler code examples</Link>?
       </p>
     </div>
   )

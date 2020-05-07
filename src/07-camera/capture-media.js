@@ -120,11 +120,13 @@ export default function CaptureMedia ({ appState, updateAppState }) {
   }
 
   async function capture () {
+    if (!canvasRef.current) return
     var context = canvasRef.current.getContext('2d')
     context.drawImage(videoRef.current, 0, 0, width, height)
     const maxSize = 1930
     for (let quality = 0.8; quality > 0; quality -= 0.05) {
       const promise = new Promise((resolve, reject) => {
+        if (!canvasRef.current) return
         canvasRef.current.toBlob(
           blob => {
             console.log('Blob', quality, blob)
@@ -135,7 +137,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
         )
       })
       const blob = await promise
-      if (blob.size <= maxSize) {
+      if (blob && blob.size <= maxSize) {
         try {
           const cid = await client.import(blob)
           console.log('Imported', cid)
