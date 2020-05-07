@@ -1,7 +1,8 @@
 import { useEffect, useCallback } from 'react'
 import LotusRPC from '../lotus-client-rpc'
 import BrowserProvider from '../lotus-client-provider-browser'
-import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
+// import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
+import schema from '../lotus-client-schema-testnet-v3'
 
 export default function useTestgroundNet ({ appState, updateAppState }) {
   const updateAvailable = useCallback(
@@ -21,9 +22,7 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
     if (nodesScanned) return
     const api = 'lotus.testground.ipfs.team/api'
     let state = { canceled: false }
-    updateAvailable(draft => {
-      draft.splice(0) // clear array
-    })
+    updateAvailable(draft => { draft = [] })
     async function run () {
       if (state.canceled) return
       const paramsUrl = 'https://' + api + `/0/testplan/params`
