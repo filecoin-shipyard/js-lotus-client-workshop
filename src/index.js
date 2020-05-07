@@ -23,6 +23,9 @@ let initialState
 const initialStateJson = localStorage.getItem('state')
 try {
   initialState = JSON.parse(initialStateJson) || {}
+  if (Object.keys(initialState).length === 0) {
+    localStorage.setItem('state', '{}')
+  }
 } catch (e) {
   initialState = {}
 }
@@ -40,6 +43,10 @@ function App () {
     })
     const jsonStateToSave = JSON.stringify(stateToSave)
     if (jsonStateToSave !== savedState) {
+      if (!localStorage.getItem('state')) {
+        // User deleted state in browser localStorage
+        return
+      }
       localStorage.setItem('state', jsonStateToSave)
       setSavedState(jsonStateToSave)
     }
