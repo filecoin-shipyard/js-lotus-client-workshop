@@ -15,6 +15,7 @@ import StateListMiners from './05-state-list-miners'
 import StatePowerMiners from './06-state-power-miners'
 import Camera from './07-camera'
 import Deals from './08-deals'
+import Retrieve from './09-retrieve'
 import Home from './home'
 import './index.css'
 
@@ -145,14 +146,6 @@ function Store () {
           <Link to='/ipfs'>From IPFS</Link>
         </li>
       </ul>
-    </div>
-  )
-}
-
-function Retrieve () {
-  return (
-    <div>
-      <h1>Retrieve</h1>
     </div>
   )
 }
