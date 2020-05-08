@@ -55,8 +55,8 @@ export default function useScanNodesForCid ({ appState, cid }) {
           console.log('Retrieve findData:', nodeNum, offers)
           updateFound(draft => {
             for (const offer of offers) {
-              if (offer.Err !== '') return
-              if (offer.Size === 0) return
+              if (offer.Err !== '') continue
+              if (offer.Size === 0) continue
               draft.push({
                 node: nodeNum,
                 remoteOffer: offer
