@@ -114,7 +114,7 @@ function App () {
             <Route path='/upload'>
               <Upload {...baseProps} />
             </Route>
-            <Route path='/retrieve'>
+            <Route path='/retrieve/:cid?'>
               <Retrieve {...baseProps} />
             </Route>
             <Route path='/examples'>

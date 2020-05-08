@@ -1,8 +1,6 @@
 import React from 'react'
-// import useTestgroundNet from '../lib/use-testground-net'
 
 export default function SelectNode ({ appState, updateAppState }) {
-  // useTestgroundNet({ appState, updateAppState })
   const { available, selectedNode } = appState
 
   return (
