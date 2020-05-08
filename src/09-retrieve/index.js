@@ -3,7 +3,7 @@ import useScanNodesForCid from './use-scan-nodes-for-cid'
 
 export default function Retrieve ({ appState }) {
   const [cid, setCid] = useState()
-  const [found] = useScanNodesForCid({ appState, cid })
+  const [found, scanningState] = useScanNodesForCid({ appState, cid })
   const [formCid, setFormCid] = useState('')
 
   return (
@@ -22,9 +22,20 @@ export default function Retrieve ({ appState }) {
         ></input>
       </div>
       <button onClick={() => setCid(formCid)}>Find and Download</button>
-      <pre>
-        {JSON.stringify(found, null, 2)}
-      </pre>
+      {scanningState && (
+        <div>
+          {scanningState.state === 'scanning' && (
+            <>
+              Scanning {scanningState.currentNode} of {scanningState.numNodes}{' '}
+              nodes...
+            </>
+          )}
+          {scanningState.state === 'finished' && (
+            <>Scanned {scanningState.numNodes} nodes</>
+          )}
+        </div>
+      )}
+      <pre>{JSON.stringify(found, null, 2)}</pre>
     </div>
   )
 }
