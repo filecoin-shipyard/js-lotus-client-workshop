@@ -81,6 +81,33 @@ const methods = {
 
   ClientRetrieve: {}, // FIXME
 
+  /*
+  {
+    "jsonrpc":"2.0",
+    "id":3,
+    "method":"Filecoin.ClientRetrieve",
+    "params": [
+      {
+        "Root": {
+          "/": "bafkreic63nfhxpv4rpamv65gz5zfv5mvomys3xzbtyb5hiz3ilogau57ge"
+        },
+        "Size":2032,
+        "Total":"4064",
+        "PaymentInterval":1048576,
+        "PaymentIntervalIncrease":1048576,
+        "Client":"t3rtq7nigyc2wo6d4rjtzac2r772cph6jagidk427dowpdtxzj3td3gntafz5kjnlx6wet5puac6qtkwby74ja",
+        "Miner":"t0100",
+        "MinerPeerID":"12D3KooW9tZYNwFBmshE7wB9bMnN6BFU5LX1F6Ck429zPYFgoUvX"
+      },
+      {
+        "Path": "/root/downloads/out.jpg",
+        "IsCAR": false
+      }
+    ]
+  }
+  */
+
+
   // StateMinerPower         func(context.Context, address.Address, types.TipSetKey) (*api.MinerPower, error)                             `perm:"read"`
   // percI := types.BigDiv(types.BigMul(pow.MinerPower, types.NewInt(1000000)), pow.TotalPower)
   // fmt.Printf("Power: %s / %s (%0.4f%%)\n", types.SizeStr(pow.MinerPower), types.SizeStr(pow.TotalPower), float64(percI.Int64())/10000)

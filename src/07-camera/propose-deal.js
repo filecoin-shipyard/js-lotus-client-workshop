@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { FilecoinNumber } from '@openworklabs/filecoin-number'
 import copy from 'clipboard-copy'
 import useLotusClient from '../lib/use-lotus-client'
+import useWatchDefaultWallet from '../lib/use-watch-default-wallet'
 import useMiners from '../lib/use-miners'
 import DealList from '../08-deals/deal-list'
 
@@ -9,13 +9,15 @@ export default function ProposeDeal ({ appState, updateAppState }) {
   const { selectedNode } = appState
   const client = useLotusClient(selectedNode, 'node')
   const miners = useMiners(client)
+  const balance = useWatchDefaultWallet({ client, updateAppState })
   const [objectUrlAttribute, setObjectUrlAttribute] = useState()
-  const [balance, setBalance] = useState()
   const [status, setStatus] = useState()
-  const { cid, importedNode } = appState
-  const width = appState.capture.width
-  const height = appState.capture.height
-  const defaultWalletAddress = appState.defaultWalletAddress
+  const {
+    cid,
+    importedNode,
+    defaultWalletAddress,
+    capture: { width, height }
+  } = appState
   const epochPrice = '2500'
 
   useEffect(() => {
@@ -26,26 +28,6 @@ export default function ProposeDeal ({ appState, updateAppState }) {
       URL.revokeObjectURL(objectUrl)
     }
   }, [appState.capture])
-
-  useEffect(() => {
-    let state = { canceled: false }
-    if (!client) return
-    ;(async function run () {
-      if (state.canceled) return
-      const defaultWalletAddress = await client.walletDefaultAddress()
-      if (state.canceled) return
-      updateAppState(draft => {
-        draft.defaultWalletAddress = defaultWalletAddress
-      })
-      const balance = await client.walletBalance(defaultWalletAddress)
-      if (state.canceled) return
-      setBalance(new FilecoinNumber(balance, 'attofil'))
-      setTimeout(run, 1000)
-    })()
-    return () => {
-      state.canceled = true
-    }
-  }, [client, updateAppState])
 
   return (
     <div
@@ -81,8 +63,7 @@ export default function ProposeDeal ({ appState, updateAppState }) {
         <div>
           CID:{' '}
           <span style={{ fontSize: '70%' }}>
-            {cid} {' '}
-            {cid && <button onClick={copyCid}>Copy</button>}
+            {cid} {cid && <button onClick={copyCid}>Copy</button>}
             <br />
           </span>
           <span style={{ fontSize: '70%' }}>
