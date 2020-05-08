@@ -48,7 +48,7 @@ export default function Retrieve ({ appState, updateAppState }) {
                         <div>Error: {retrievals[i].error.message}</div>
                       )}
                       {retrievals[i].url && (
-                        <img src={retrievals[i].url} alt="retrieved image" />
+                        <img src={retrievals[i].url} alt="retrieved" />
                       )}
                     </>
                   )}
