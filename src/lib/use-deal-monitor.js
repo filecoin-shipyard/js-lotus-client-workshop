@@ -10,8 +10,8 @@ const terminalStates = new Set([
   1, // StorageDealProposalNotFound
   2, // StorageDealProposalRejected
   8, // StorageDealNotFound
-  15, // StorageDealError
-  16 // StorageDealCompleted
+  20, // StorageDealError
+  21 // StorageDealCompleted
 ])
 
 export default function useDealMonitor ({ appState, updateAppState }) {

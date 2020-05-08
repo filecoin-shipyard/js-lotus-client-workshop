@@ -14,14 +14,20 @@ const dealStateNames = [
   'Failing', // 7
   'NotFound', // 8
 
-  'FundsEnsured', // 9
-  'Validating', // 10
-  'Transferring', // 11
-  'WaitingForData', // 12
-  'VerifyData', // 13
-  'Publishing', // 14
-  'Error', // 15
-  'Completed' // 16
+  // Internal
+  'FundsEnsured', // 9 Deposited funds as neccesary to create a deal, ready to move forward
+  'Validating', // 10 Verifying that deal parameters are good
+  'Transferring', // 11 Moving data
+  'WaitingForData', // 12 Manual transfer
+  'VerifyData', // 13 Verify transferred data - generate CAR / piece data
+  'EnsureProviderFunds', // 14 Ensuring that provider collateral is sufficient
+  'EnsureClientFunds', // 15 Ensuring that client funds are sufficient
+  'ProviderFunding', // 16 Waiting for funds to appear in Provider balance
+  'ClientFunding', // 17 Waiting for funds to appear in Client balance
+  'Publish', // 18 Publishing deal to chain
+  'Publishing', // 19 Waiting for deal to appear on chain
+  'Error', // 20 deal failed with an unexpected error
+  'Completed' // 21 on provider side, indicates deal is active and info for retrieval is recorded
 ]
 
 function DealHistory ({ dealHistoryData, height }) {
@@ -34,7 +40,9 @@ function DealHistory ({ dealHistoryData, height }) {
         {dealHistoryData.map((record, i) => {
           return (
             <tr key={i}>
-              <td>{dealStateNames[record[0]]}</td>
+              <td>
+                {dealStateNames[record[0]]}
+              </td>
               <td>{blocks(i)}</td>
               <td>{timeElapsed(i)}</td>
             </tr>
@@ -107,7 +115,11 @@ export default function DealList ({ client, appState, cid }) {
             <div style={{ fontSize: '50%' }}>
               <div>Date: {new Date(date).toString()}</div>
               <div>Type: {type}</div>
-              {!cid && <div>CID: {cidDeal} <button onClick={copyCid}>Copy</button></div>}
+              {!cid && (
+                <div>
+                  CID: {cidDeal} <button onClick={copyCid}>Copy</button>
+                </div>
+              )}
               <div>Proposal CID: {proposalCid}</div>
               <div>State: {dealData && dealStateNames[dealState]}</div>
               <div>
