@@ -10,6 +10,8 @@ class LotusClientRPC {
           return undefined
         } else if (prop === Symbol.toStringTag) {
           return undefined
+        } else if (prop === '$$typeof') {
+          return undefined
         } else {
           const method = prop.charAt(0).toUpperCase() + prop.slice(1)
           const schemaMethod = schema.methods[method]

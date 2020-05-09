@@ -4,6 +4,8 @@ import BrowserProvider from '../lotus-client-provider-browser'
 // import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
 import schema from '../lotus-client-schema-testnet-v3'
 
+const api = 'lotus.testground.ipfs.team/api'
+
 export default function useTestgroundNet ({ appState, updateAppState }) {
   const updateAvailable = useCallback(
     updateFunc => {
@@ -16,22 +18,24 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
     },
     [updateAppState]
   )
-  const { selectedNode, nodesScanned } = appState
+  const { selectedNode, nodesScanned, rescan, genesisCid } = appState
 
   useEffect(() => {
-    if (nodesScanned) return
-    const api = 'lotus.testground.ipfs.team/api'
+    if (nodesScanned && !(rescan > nodesScanned)) return
     let state = { canceled: false }
-    updateAvailable(draft => { draft = [] })
+    updateAvailable(draft => {
+      draft = []
+    })
     async function run () {
       if (state.canceled) return
-      const paramsUrl = 'https://' + api + `/0/testplan/params`
+      if (!genesisCid) return
+      const paramsUrl = `https://${api}/0/testplan/params`
       const response = await fetch(paramsUrl)
       const { TestInstanceCount: nodeCount } = await response.json()
       if (state.canceled) return
       const available = {}
       for (let i = 0; i < nodeCount; i++) {
-        const url = 'https://' + api + `/${i}/miner/rpc/v0`
+        const url = `https://${api}/${i}/miner/rpc/v0`
         const provider = new BrowserProvider(url, { transport: 'http' })
         const client = new LotusRPC(provider, { schema })
         try {
@@ -45,12 +49,12 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
         }
       }
       updateAppState(draft => {
-        draft.nodesScanned = true
+        draft.nodesScanned = Date.now()
       })
       if (typeof selectedNode === 'undefined' || !available[selectedNode]) {
         // Select a random node
         const keys = Object.keys(available)
-        const randomIndex =  Math.floor(Math.random() * Math.floor(keys.length))
+        const randomIndex = Math.floor(Math.random() * Math.floor(keys.length))
         updateAppState(draft => {
           draft.selectedNode = Number(keys[randomIndex])
         })
@@ -60,5 +64,34 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
     return () => {
       state.canceled = true
     }
-  }, [updateAppState, updateAvailable, nodesScanned, selectedNode])
+  }, [updateAppState, updateAvailable, nodesScanned, selectedNode, genesisCid, rescan])
+
+  useEffect(() => {
+    let state = { canceled: false }
+    async function run () {
+      if (state.canceled) return
+      const url = `https://${api}/0/node/rpc/v0`
+      const provider = new BrowserProvider(url, { transport: 'http' })
+      const client = new LotusRPC(provider, { schema })
+      try {
+        const {
+          Cids: [{ '/': genesisCid }]
+        } = await client.chainGetGenesis()
+        console.log('Genesis', genesisCid)
+        updateAppState(draft => {
+          if (draft.genesisCid && draft.genesisCid !== genesisCid) {
+            console.log('Old Genesis is different, resetting', draft.genesisCid)
+            for (const prop in draft) { delete draft[prop] }
+          }
+          draft.genesisCid = genesisCid
+        })
+      } catch (e) {
+        console.warn('Error fetching genesis:', e)
+      }
+    }
+    run()
+    return () => {
+      state.canceled = true
+    }
+  }, [updateAppState])
 }

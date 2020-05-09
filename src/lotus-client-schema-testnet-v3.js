@@ -30,6 +30,9 @@ const methods = {
     }
   },
 
+	// ChainGetGenesis(context.Context) (*types.TipSet, error)
+  ChainGetGenesis: {}, // FIXME
+
   // ClientStartDeal   func(ctx context.Context, params *api.StartDealParams) (*cid.Cid, error)                             `perm:"admin"`
   /*
   {

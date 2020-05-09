@@ -6,20 +6,33 @@ export default function SelectNode ({ appState, updateAppState }) {
   return (
     <div>
       <h2>Available Nodes</h2>
+      <button
+        style={{ marginBottom: '1rem' }}
+        onClick={() => {
+          updateAppState(draft => {
+            draft.rescan = Date.now()
+          })
+        }}
+      >
+        Rescan
+      </button>
       <div>
-        Which node would you like to be?<br/><br/>
-        {available && available.map((miner, i) => (
-          <div key={i}>
-            <input
-              type='radio'
-              name='node'
-              value={i}
-              checked={i === selectedNode}
-              onChange={selectNode}
-            />
-            #{i}
-          </div>
-        ))}
+        Which node would you like to be?
+        <br />
+        <br />
+        {available &&
+          available.map((miner, i) => (
+            <div key={i}>
+              <input
+                type='radio'
+                name='node'
+                value={i}
+                checked={i === selectedNode}
+                onChange={selectNode}
+              />
+              #{i}
+            </div>
+          ))}
       </div>
     </div>
   )
