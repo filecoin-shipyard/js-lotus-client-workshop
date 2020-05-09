@@ -1,7 +1,13 @@
 import React from 'react'
 
 export default function SelectNode ({ appState, updateAppState }) {
-  const { available, selectedNode } = appState
+  const { available, selectedNode, versionInfo, sectorSize } = appState
+  const blockDelay = versionInfo && versionInfo.BlockDelay
+  const version = versionInfo && versionInfo.Version
+  const versionMatch = version.match(/git([0-9a-f]+)/)
+  const versionUrl =
+    versionMatch &&
+    `https://github.com/filecoin-project/lotus/commit/${versionMatch[1]}`
 
   return (
     <div>
@@ -33,6 +39,15 @@ export default function SelectNode ({ appState, updateAppState }) {
               #{i}
             </div>
           ))}
+      </div>
+      <h2>Network Info</h2>
+      <div>
+        <div>
+          Version: {versionUrl && <a href={versionUrl}>{version}</a>}
+          {!versionUrl && <>{version}</>}
+        </div>
+        <div>Block Delay: {blockDelay}</div>
+        <div>Sector Size: {sectorSize}</div>
       </div>
     </div>
   )

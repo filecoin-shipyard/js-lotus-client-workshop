@@ -135,6 +135,9 @@ const methods = {
     }
   },
 
+	// StateMinerInfo(context.Context, address.Address, types.TipSetKey) (miner.MinerInfo, error)
+  StateMinerInfo: {},
+
   // StateMinerPostState(ctx context.Context, actor address.Address, tsk types.TipSetKey) (*miner.PoStState, error)
   // ps, err := api.StateMinerPostState(ctx, maddr, types.EmptyTSK)
   StateMinerPostState: {

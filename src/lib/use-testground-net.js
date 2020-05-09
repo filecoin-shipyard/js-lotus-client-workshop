@@ -75,16 +75,27 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
       const client = new LotusRPC(provider, { schema })
       try {
         const {
-          Cids: [{ '/': genesisCid }]
+          Cids: [{ '/': newGenesisCid }]
         } = await client.chainGetGenesis()
-        console.log('Genesis', genesisCid)
+        console.log('Genesis CID:', newGenesisCid)
+        const updated = newGenesisCid !== genesisCid
         updateAppState(draft => {
           if (draft.genesisCid && draft.genesisCid !== genesisCid) {
             console.log('Old Genesis is different, resetting', draft.genesisCid)
             for (const prop in draft) { delete draft[prop] }
           }
-          draft.genesisCid = genesisCid
+          draft.genesisCid = newGenesisCid
         })
+        if (updated) {
+          const versionInfo = await client.version()
+          console.log('Version Info:', versionInfo)
+          const genesisMinerInfo = await client.stateMinerInfo('t01000',[])
+          console.log('Genesis Miner Info:', genesisMinerInfo)
+          updateAppState(draft => {
+            draft.versionInfo = versionInfo
+            draft.sectorSize = genesisMinerInfo.SectorSize
+          })
+        }
       } catch (e) {
         console.warn('Error fetching genesis:', e)
       }
@@ -93,5 +104,5 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
     return () => {
       state.canceled = true
     }
-  }, [updateAppState])
+  }, [updateAppState, genesisCid])
 }
