@@ -31,7 +31,10 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
       if (!genesisCid) return
       const paramsUrl = `https://${api}/0/testplan/params`
       const response = await fetch(paramsUrl)
-      const { TestInstanceCount: nodeCount } = await response.json()
+      const {
+        TestInstanceCount: nodeCount,
+        TestRun: testgroundRunId
+      } = await response.json()
       if (state.canceled) return
       const available = {}
       for (let i = 0; i < nodeCount; i++) {
@@ -50,6 +53,7 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
       }
       updateAppState(draft => {
         draft.nodesScanned = Date.now()
+        draft.testgroundRunId = testgroundRunId
       })
       if (typeof selectedNode === 'undefined' || !available[selectedNode]) {
         // Select a random node
@@ -104,5 +108,5 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
     return () => {
       state.canceled = true
     }
-  }, [updateAppState, genesisCid])
+  }, [updateAppState, genesisCid, rescan])
 }

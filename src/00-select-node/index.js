@@ -1,7 +1,13 @@
 import React from 'react'
 
 export default function SelectNode ({ appState, updateAppState }) {
-  const { available, selectedNode, versionInfo, sectorSize } = appState
+  const {
+    available,
+    selectedNode,
+    versionInfo,
+    sectorSize,
+    testgroundRunId
+  } = appState
   const blockDelay = versionInfo && versionInfo.BlockDelay
   const version = versionInfo && versionInfo.Version
   const versionMatch = version.match(/git([0-9a-f]+)/)
@@ -48,6 +54,7 @@ export default function SelectNode ({ appState, updateAppState }) {
         </div>
         <div>Block Delay: {blockDelay}</div>
         <div>Sector Size: {sectorSize}</div>
+        <div>Testground Run ID: {testgroundRunId}</div>
       </div>
     </div>
   )
