@@ -10,7 +10,7 @@ export default function SelectNode ({ appState, updateAppState }) {
   } = appState
   const blockDelay = versionInfo && versionInfo.BlockDelay
   const version = versionInfo && versionInfo.Version
-  const versionMatch = version.match(/git([0-9a-f]+)/)
+  const versionMatch = version && version.match(/git([0-9a-f]+)/)
   const versionUrl =
     versionMatch &&
     `https://github.com/filecoin-project/lotus/commit/${versionMatch[1]}`
