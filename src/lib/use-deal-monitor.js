@@ -15,7 +15,7 @@ const terminalStates = new Set([
 ])
 
 export default function useDealMonitor ({ appState, updateAppState }) {
-  const { deals, dealData } = appState
+  const { deals, dealData, genesisCid } = appState
   const [currentNode, setCurrentNode] = useState(0)
   const [ticker, setTicker] = useState(0)
   const [terminated, updateTerminated] = useImmer({})
@@ -56,7 +56,7 @@ export default function useDealMonitor ({ appState, updateAppState }) {
     // console.log('checkSet', checkSet)
 
     return checkSet
-  }, [deals, terminated])
+  }, [deals, terminated, genesisCid])
 
   useEffect(() => {
     let state = { canceled: false }
@@ -134,5 +134,5 @@ export default function useDealMonitor ({ appState, updateAppState }) {
     return () => {
       state.canceled = true
     }
-  }, [client, ticker, updateAppState])
+  }, [client, ticker, updateAppState, genesisCid])
 }
