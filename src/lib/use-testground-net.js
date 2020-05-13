@@ -84,7 +84,7 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
         console.log('Genesis CID:', newGenesisCid)
         const updated = newGenesisCid !== genesisCid
         updateAppState(draft => {
-          if (draft.genesisCid && draft.genesisCid !== genesisCid) {
+          if (draft.genesisCid && draft.genesisCid !== newGenesisCid) {
             console.log('Old Genesis is different, resetting', draft.genesisCid)
             for (const prop in draft) { delete draft[prop] }
           }
