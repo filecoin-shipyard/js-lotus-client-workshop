@@ -6,7 +6,8 @@ export default function SelectNode ({ appState, updateAppState }) {
     selectedNode,
     versionInfo,
     sectorSize,
-    testgroundRunId
+    testgroundRunId,
+    ipfsVersion
   } = appState
   const blockDelay = versionInfo && versionInfo.BlockDelay
   const version = versionInfo && versionInfo.Version
@@ -14,6 +15,10 @@ export default function SelectNode ({ appState, updateAppState }) {
   const versionUrl =
     versionMatch &&
     `https://github.com/filecoin-project/lotus/commit/${versionMatch[1]}`
+  const ipfsVersionUrl =
+    ipfsVersion &&
+    'https://github.com/ipfs/go-ipfs/commit/' +
+      ipfsVersion.commit.replace('-dirty', '')
 
   return (
     <div>
@@ -55,6 +60,12 @@ export default function SelectNode ({ appState, updateAppState }) {
         <div>Block Delay: {blockDelay}</div>
         <div>Sector Size: {sectorSize}</div>
         <div>Testground Run ID: {testgroundRunId}</div>
+        {ipfsVersion && (
+          <div>
+            IPFS: {ipfsVersion.version} (
+            <a href={ipfsVersionUrl}>{ipfsVersion.commit.slice(0, 6)}</a>)
+          </div>
+        )}
       </div>
     </div>
   )

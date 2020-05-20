@@ -3,6 +3,7 @@ import LotusRPC from '../lotus-client-rpc'
 import BrowserProvider from '../lotus-client-provider-browser'
 // import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
 import schema from '../lotus-client-schema-testnet-v3'
+import IpfsHttpClient from 'ipfs-http-client'
 
 const api = 'lotus.testground.ipfs.team/api'
 
@@ -122,4 +123,30 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
       state.canceled = true
     }
   }, [updateAppState, genesisCid, rescan])
+
+  useEffect(() => {
+    let state = { canceled: false }
+    const ipfs = IpfsHttpClient({
+      host: 'lotus.testground.ipfs.team',
+      port: 443,
+      protocol: 'https',
+      apiPath: '/api/0/ipfs/api/v0'
+    })
+    async function run () {
+      if (state.canceled) return
+      try {
+        const version = await ipfs.version()
+        if (state.canceled) return
+        updateAppState(draft => {
+          draft.ipfsVersion = version
+        })
+      } catch (e) {
+        console.warn('Error connecting to IPFS:', e)
+      }
+    }
+    run()
+    return () => {
+      state.canceled = true
+    }
+  }, [updateAppState])
 }
