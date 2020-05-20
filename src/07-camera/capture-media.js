@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
+import IpfsHttpClient from 'ipfs-http-client'
 import useLotusClient from '../lib/use-lotus-client'
 
 export default function CaptureMedia ({ appState, updateAppState }) {
@@ -139,6 +140,28 @@ export default function CaptureMedia ({ appState, updateAppState }) {
       const blob = await promise
       if (blob && blob.size <= maxSize) {
         try {
+          const ipfs = IpfsHttpClient({
+            host: 'lotus.testground.ipfs.team',
+            port: 443,
+            protocol: 'https',
+            apiPath: `/api/${selectedNode}/ipfs/api/v0`
+          })
+          const results = await ipfs.add(blob)
+          for await (const result of results) {
+            console.log('IPFS add result', result)
+            updateAppState(draft => {
+              draft.capture = {
+                quality,
+                blob,
+                width,
+                height
+              }
+              draft.cid = result.path
+              draft.importedNode = selectedNode
+            })
+            break
+          }
+          /*
           const cid = await client.import(blob)
           console.log('Imported', cid)
           updateAppState(draft => {
@@ -151,6 +174,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
             draft.cid = cid
             draft.importedNode = selectedNode
           })
+          */
         } catch (e) {
           console.error('Import error', e)
           setError(e)
