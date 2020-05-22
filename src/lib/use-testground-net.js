@@ -1,8 +1,7 @@
 import { useEffect, useCallback } from 'react'
-import LotusRPC from '../lotus-client-rpc'
-import BrowserProvider from '../lotus-client-provider-browser'
-// import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
-import schema from '../lotus-client-schema-testnet-v3'
+import LotusRPC from '@filecoin-shipyard/lotus-client-rpc'
+import BrowserProvider from '@filecoin-shipyard/lotus-client-provider-browser'
+import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
 import IpfsHttpClient from 'ipfs-http-client'
 
 const api = 'lotus.testground.ipfs.team/api'

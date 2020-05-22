@@ -4,7 +4,7 @@ import useLotusClient from '../lib/use-lotus-client'
 
 export default function CaptureMedia ({ appState, updateAppState }) {
   const { selectedNode } = appState
-  const client = useLotusClient(selectedNode, 'node')
+  // const client = useLotusClient(selectedNode, 'node')
   const videoRef = useRef()
   const canvasRef = useRef()
   const [opened, setOpened] = useState()
