@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import IpfsHttpClient from 'ipfs-http-client'
-import useLotusClient from '../lib/use-lotus-client'
+// import useLotusClient from '../lib/use-lotus-client'
 
 export default function CaptureMedia ({ appState, updateAppState }) {
   const { selectedNode } = appState
