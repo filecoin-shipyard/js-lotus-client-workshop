@@ -14,8 +14,8 @@ export default function Home () {
       </p>
       <p>
         GitHub:{' '}
-        <a href='https://github.com/filecoin-shipyard/js-lotus-rpc-workshop'>
-          filecoin-shipyard/js-lotus-rpc-workshop
+        <a href='https://github.com/filecoin-shipyard/js-lotus-client-workshop'>
+          filecoin-shipyard/js-lotus-client-workshop
         </a>
       </p>
       <p>
