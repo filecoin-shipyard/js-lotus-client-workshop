@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useImmer } from 'use-immer'
+import LotusRPC from '@filecoin-shipyard/lotus-client-rpc'
+import BrowserProvider from '@filecoin-shipyard/lotus-client-provider-browser'
+import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
 import useLotusClient from '../lib/use-lotus-client'
 import useWatchDefaultWallet from '../lib/use-watch-default-wallet'
 import useScanNodesForCid from './use-scan-nodes-for-cid'
@@ -31,7 +34,8 @@ export default function Retrieve ({ appState, updateAppState }) {
           } else {
             return (
               <div key={i}>
-                Node #{entry.node}: Via miner owned by account {entry.remoteOffer.Miner}
+                Node #{entry.node}: Via miner owned by account{' '}
+                {entry.remoteOffer.Miner}
                 <div style={{ fontSize: '70%', margin: '0.5rem 1rem' }}>
                   Retrieval Price: {entry.remoteOffer.MinPrice}
                   <br />
@@ -48,7 +52,7 @@ export default function Retrieve ({ appState, updateAppState }) {
                         <div>Error: {retrievals[i].error.message}</div>
                       )}
                       {retrievals[i].url && (
-                        <img src={retrievals[i].url} alt="retrieved" />
+                        <img src={retrievals[i].url} alt='retrieved' />
                       )}
                     </>
                   )}
@@ -62,28 +66,41 @@ export default function Retrieve ({ appState, updateAppState }) {
                 Math.random() * Number.MAX_SAFE_INTEGER
               )
               const o = entry.remoteOffer
-              const retrievalOffer = {
-                Root: o.Root,
-                Size: o.Size,
-                Total: o.MinPrice,
-                PaymentInterval: o.PaymentInterval,
-                PaymentIntervalIncrease: o.PaymentIntervalIncrease,
-                Client: defaultWalletAddress,
-                Miner: o.Miner,
-                MinerPeerID: o.MinerPeerID
-              }
-              const fileRef = {
-                Path: `/root/downloads/${cid}-${randomId}.jpg`,
-                IsCAR: false
-              }
               try {
-                console.log('Jim clientRetrieve', retrievalOffer, fileRef)
                 updateRetrievals(draft => {
                   draft[i] = {
                     state: 'retrieving'
                   }
                 })
-                const result = await client.clientRetrieve(
+                const api = 'lotus.testground.ipfs.team/api'
+                const wsUrl = 'wss://' + api + `/${entry.node}/node/rpc/v0`
+                const provider = new BrowserProvider(wsUrl, {
+                  token: async () => {
+                    const tokenUrl =
+                      'https://' + api + `/${entry.node}/testplan/.lotus/token`
+                    const response = await fetch(tokenUrl)
+                    return await response.text()
+                  },
+                  transport: 'http'
+                })
+                const retrieveClient = new LotusRPC(provider, { schema })
+                const walletAddress = await retrieveClient.walletDefaultAddress()
+                const retrievalOffer = {
+                  Root: o.Root,
+                  Size: o.Size,
+                  Total: o.MinPrice,
+                  PaymentInterval: o.PaymentInterval,
+                  PaymentIntervalIncrease: o.PaymentIntervalIncrease,
+                  Client: walletAddress,
+                  Miner: o.Miner,
+                  MinerPeerID: o.MinerPeerID
+                }
+                const fileRef = {
+                  Path: `/root/downloads/${cid}-${randomId}.jpg`,
+                  IsCAR: false
+                }
+                console.log('Jim clientRetrieve', retrievalOffer, fileRef)
+                const result = await retrieveClient.clientRetrieve(
                   retrievalOffer,
                   fileRef
                 )
@@ -93,7 +110,7 @@ export default function Retrieve ({ appState, updateAppState }) {
                     state: 'success',
                     url:
                       `https://lotus.testground.ipfs.team/api/` +
-                      `${selectedNode}/testplan/downloads/` +
+                      `${entry.node}/testplan/downloads/` +
                       `${cid}-${randomId}.jpg`
                   }
                 })
@@ -136,6 +153,7 @@ export default function Retrieve ({ appState, updateAppState }) {
             <span>CID:</span>
             <input
               type='text'
+              spellCheck='false'
               value={formCid}
               onChange={e => {
                 setFormCid(e.target.value)
