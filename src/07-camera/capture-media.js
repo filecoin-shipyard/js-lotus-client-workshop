@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import useLotusClient from '../lib/use-lotus-client'
+import IpfsHttpClient from 'ipfs-http-client'
+// import useLotusClient from '../lib/use-lotus-client'
 
 export default function CaptureMedia ({ appState, updateAppState }) {
   const { selectedNode } = appState
-  const client = useLotusClient(selectedNode, 'node')
+  // const client = useLotusClient(selectedNode, 'node')
   const videoRef = useRef()
   const canvasRef = useRef()
   const [opened, setOpened] = useState()
@@ -14,7 +15,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
 
   const canPlay = useCallback(ev => {
     const video = videoRef.current
-    console.log('canplay', ev, video.videoWidth, video.videoHeight)
+    // console.log('canplay', ev, video.videoWidth, video.videoHeight)
     const height = video.videoHeight / (video.videoWidth / width)
     setHeight(height)
   }, [])
@@ -120,11 +121,13 @@ export default function CaptureMedia ({ appState, updateAppState }) {
   }
 
   async function capture () {
+    if (!canvasRef.current) return
     var context = canvasRef.current.getContext('2d')
     context.drawImage(videoRef.current, 0, 0, width, height)
     const maxSize = 1930
     for (let quality = 0.8; quality > 0; quality -= 0.05) {
       const promise = new Promise((resolve, reject) => {
+        if (!canvasRef.current) return
         canvasRef.current.toBlob(
           blob => {
             console.log('Blob', quality, blob)
@@ -135,8 +138,30 @@ export default function CaptureMedia ({ appState, updateAppState }) {
         )
       })
       const blob = await promise
-      if (blob.size <= maxSize) {
+      if (blob && blob.size <= maxSize) {
         try {
+          const ipfs = IpfsHttpClient({
+            host: 'lotus.testground.ipfs.team',
+            port: 443,
+            protocol: 'https',
+            apiPath: `/api/${selectedNode}/ipfs/api/v0`
+          })
+          const results = await ipfs.add(blob)
+          for await (const result of results) {
+            console.log('IPFS add result', result)
+            updateAppState(draft => {
+              draft.capture = {
+                quality,
+                blob,
+                width,
+                height
+              }
+              draft.cid = result.path
+              draft.importedNode = selectedNode
+            })
+            break
+          }
+          /*
           const cid = await client.import(blob)
           console.log('Imported', cid)
           updateAppState(draft => {
@@ -149,6 +174,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
             draft.cid = cid
             draft.importedNode = selectedNode
           })
+          */
         } catch (e) {
           console.error('Import error', e)
           setError(e)

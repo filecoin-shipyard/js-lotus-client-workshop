@@ -15,6 +15,7 @@ import StateListMiners from './05-state-list-miners'
 import StatePowerMiners from './06-state-power-miners'
 import Camera from './07-camera'
 import Deals from './08-deals'
+import Retrieve from './09-retrieve'
 import Home from './home'
 import './index.css'
 
@@ -22,6 +23,9 @@ let initialState
 const initialStateJson = localStorage.getItem('state')
 try {
   initialState = JSON.parse(initialStateJson) || {}
+  if (Object.keys(initialState).length === 0) {
+    localStorage.setItem('state', '{}')
+  }
 } catch (e) {
   initialState = {}
 }
@@ -39,6 +43,10 @@ function App () {
     })
     const jsonStateToSave = JSON.stringify(stateToSave)
     if (jsonStateToSave !== savedState) {
+      if (!localStorage.getItem('state')) {
+        // User deleted state in browser localStorage
+        return
+      }
       localStorage.setItem('state', jsonStateToSave)
       setSavedState(jsonStateToSave)
     }
@@ -61,7 +69,7 @@ function App () {
           <Link to='/miners'>Miners</Link>
         </nav>
         <nav style={{ display: 'flex', flexWrap: 'wrap' }}>
-          <Link to='/store'>Store</Link>
+          <Link to='/camera'>Store: Camera</Link>
           <Link to='/retrieve'>Retrieve</Link>
           <Link to='/deals'>My Deals</Link>
         </nav>
@@ -106,7 +114,7 @@ function App () {
             <Route path='/upload'>
               <Upload {...baseProps} />
             </Route>
-            <Route path='/retrieve'>
+            <Route path='/retrieve/:cid?'>
               <Retrieve {...baseProps} />
             </Route>
             <Route path='/examples'>
@@ -145,14 +153,6 @@ function Store () {
           <Link to='/ipfs'>From IPFS</Link>
         </li>
       </ul>
-    </div>
-  )
-}
-
-function Retrieve () {
-  return (
-    <div>
-      <h1>Retrieve</h1>
     </div>
   )
 }
