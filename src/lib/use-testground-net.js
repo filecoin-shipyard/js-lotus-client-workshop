@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from 'react'
-import LotusRPC from '@filecoin-shipyard/lotus-client-rpc'
-import BrowserProvider from '@filecoin-shipyard/lotus-client-provider-browser'
-import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
+import { LotusRPC } from '@filecoin-shipyard/lotus-client-rpc'
+import { BrowserProvider } from '@filecoin-shipyard/lotus-client-provider-browser'
+import { testnet } from '@filecoin-shipyard/lotus-client-schema'
 import IpfsHttpClient from 'ipfs-http-client'
 
 const api = 'lotus.testground.ipfs.team/api'
@@ -40,7 +40,7 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
       for (let i = 0; i < nodeCount; i++) {
         const url = `https://${api}/${i}/miner/rpc/v0`
         const provider = new BrowserProvider(url, { transport: 'http' })
-        const client = new LotusRPC(provider, { schema })
+        const client = new LotusRPC(provider, { schema: testnet.fullNode })
         try {
           const minerAddress = await client.actorAddress()
           available[i] = minerAddress
@@ -87,7 +87,7 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
       if (state.canceled) return
       const url = `https://${api}/0/node/rpc/v0`
       const provider = new BrowserProvider(url, { transport: 'http' })
-      const client = new LotusRPC(provider, { schema })
+      const client = new LotusRPC(provider, { schema: testnet.fullNode })
       try {
         const {
           Cids: [{ '/': newGenesisCid }]

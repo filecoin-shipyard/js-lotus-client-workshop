@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
-import LotusRPC from '@filecoin-shipyard/lotus-client-rpc'
-import BrowserProvider from '@filecoin-shipyard/lotus-client-provider-browser'
-import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
+import { LotusRPC } from '@filecoin-shipyard/lotus-client-rpc'
+import { BrowserProvider } from '@filecoin-shipyard/lotus-client-provider-browser'
+import { testnet } from '@filecoin-shipyard/lotus-client-schema'
 import { useImmer } from 'use-immer'
 
 export default function useScanNodesForCid ({ appState, cid }) {
@@ -35,7 +35,7 @@ export default function useScanNodesForCid ({ appState, cid }) {
             return await response.text()
           }
         })
-        const client = new LotusRPC(provider, { schema })
+        const client = new LotusRPC(provider, { schema: testnet.fullNode })
         try {
           if (state.canceled) return
           const hasLocal = await client.clientHasLocal({ '/': cid })

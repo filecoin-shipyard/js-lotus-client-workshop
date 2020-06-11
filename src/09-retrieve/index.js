@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useImmer } from 'use-immer'
-import LotusRPC from '@filecoin-shipyard/lotus-client-rpc'
-import BrowserProvider from '@filecoin-shipyard/lotus-client-provider-browser'
-import schema from '@filecoin-shipyard/lotus-client-schema/prototype/testnet-v3'
+import { LotusRPC } from '@filecoin-shipyard/lotus-client-rpc'
+import { BrowserProvider } from '@filecoin-shipyard/lotus-client-provider-browser'
+import { testnet } from '@filecoin-shipyard/lotus-client-schema'
 import useLotusClient from '../lib/use-lotus-client'
 import useWatchDefaultWallet from '../lib/use-watch-default-wallet'
 import useScanNodesForCid from './use-scan-nodes-for-cid'
@@ -83,7 +83,7 @@ export default function Retrieve ({ appState, updateAppState }) {
                   },
                   transport: 'http'
                 })
-                const retrieveClient = new LotusRPC(provider, { schema })
+                const retrieveClient = new LotusRPC(provider, { schema: testnet.fullNode })
                 const walletAddress = await retrieveClient.walletDefaultAddress()
                 const retrievalOffer = {
                   Root: o.Root,
