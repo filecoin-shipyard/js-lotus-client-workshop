@@ -38,18 +38,10 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
       if (state.canceled) return
       const available = {}
       for (let i = 0; i < nodeCount; i++) {
-        const url = `https://${api}/${i}/miner/rpc/v0`
-        const provider = new BrowserProvider(url, { transport: 'http' })
-        const client = new LotusRPC(provider, { schema: testnet.fullNode })
-        try {
-          const minerAddress = await client.actorAddress()
-          available[i] = minerAddress
-          updateAvailable(draft => {
-            draft[i] = minerAddress
-          })
-        } catch (e) {
-          console.warn('Node error:', i, e)
-        }
+        available[i] = true
+        updateAvailable(draft => {
+          draft[i] = true
+        })
       }
       updateAppState(draft => {
         draft.nodesScanned = Date.now()
