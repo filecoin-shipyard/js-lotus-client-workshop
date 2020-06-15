@@ -1,6 +1,6 @@
 dependencies:
-  '@filecoin-shipyard/lotus-client-provider-browser': 0.0.11
-  '@filecoin-shipyard/lotus-client-rpc': 0.0.10
+  '@filecoin-shipyard/lotus-client-provider-browser': 0.0.14
+  '@filecoin-shipyard/lotus-client-rpc': 0.0.11
   '@filecoin-shipyard/lotus-client-schema': 0.0.10
   '@openworklabs/filecoin-number': 0.0.6
   clipboard-copy: 3.1.0
@@ -8,7 +8,7 @@ dependencies:
   date-fns: 2.14.0
   express: 4.17.1
   http-proxy-middleware: 1.0.4
-  immer: 7.0.0
+  immer: 7.0.1
   ipfs-http-client: 44.2.0
   react: 16.13.1
   react-dom: 16.13.1
@@ -2021,14 +2021,14 @@ packages:
     dev: false
     resolution:
       integrity: sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
-  /@filecoin-shipyard/lotus-client-provider-browser/0.0.11:
+  /@filecoin-shipyard/lotus-client-provider-browser/0.0.14:
     dev: false
     resolution:
-      integrity: sha512-AuMwAUolqyfQs04X+TiSvzFP1hNMQS2zcBePfkEUL42Fp5s23Q1rXAoL2YKaNu1MUyB+1CW0nLNFOCmlwqTQfw==
-  /@filecoin-shipyard/lotus-client-rpc/0.0.10:
+      integrity: sha512-rFH2aUA65fa9C+3d8JoKxL/UGYPbEqIjhJ9ZMJS50aKFELMA1FJ/l10Tpgkx0p6KrdygfIytHneITvpgcumR4g==
+  /@filecoin-shipyard/lotus-client-rpc/0.0.11:
     dev: false
     resolution:
-      integrity: sha512-0shqzGJJnAbYQ2V4kvOfrKGaAm3KNXkrY8JhJznyMj8VOLsIEmMfG6+qj/SJkj2tfzMhaRHUB6IDHTczS2xmnA==
+      integrity: sha512-7ZgT7tyB+5fp5mC9yC4Da9vj3M8PiVPNuxFkFAaDRu8blDuKg/tNh4OMZr5pqs/uuwjRZuXslGl8dOb2Iz+rZg==
   /@filecoin-shipyard/lotus-client-schema/0.0.10:
     dev: false
     resolution:
@@ -6444,10 +6444,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-O3sR1/opvCDGLEVcvrGTMtLac8GJ5IwZC4puPrLuRj3l7ICKvkmA0vGuU9OW8mV9WIBRnaxp5GJh9IEAaNOoYg==
-  /immer/7.0.0:
+  /immer/7.0.1:
     dev: false
     resolution:
-      integrity: sha512-fDG+mIa2se3ICnLYtYGazWwKN9L7rtvrIDK56IMisJ53JHY223g01nLvmYs8SXNSmnOYP7OeYfNJMT0aBT4pdA==
+      integrity: sha512-DpWL/ES2Ba8KwW+A5AgNRoJPZP8LxdHejKXar1VfbF5a7ATvvekzmmNSQxje+WG0DIhuanvFEumFffVqyCLmBQ==
   /import-cwd/2.1.0:
     dependencies:
       import-from: 2.1.0
@@ -12852,8 +12852,8 @@ registry: 'https://registry.npmjs.org/'
 shrinkwrapMinorVersion: 9
 shrinkwrapVersion: 3
 specifiers:
-  '@filecoin-shipyard/lotus-client-provider-browser': ^0.0.11
-  '@filecoin-shipyard/lotus-client-rpc': ^0.0.10
+  '@filecoin-shipyard/lotus-client-provider-browser': ^0.0.14
+  '@filecoin-shipyard/lotus-client-rpc': ^0.0.11
   '@filecoin-shipyard/lotus-client-schema': ^0.0.10
   '@openworklabs/filecoin-number': ^0.0.6
   clipboard-copy: ^3.1.0
@@ -12861,7 +12861,7 @@ specifiers:
   date-fns: ^2.14.0
   express: ^4.17.1
   http-proxy-middleware: ^1.0.4
-  immer: ^7.0.0
+  immer: ^7.0.1
   ipfs-http-client: ^44.2.0
   react: ^16.13.1
   react-dom: ^16.13.1

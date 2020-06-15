@@ -162,7 +162,7 @@ export default function CaptureMedia ({ appState, updateAppState }) {
             break
           }
           /*
-          const cid = await client.import(blob)
+          const cid = await client.importFile(blob)
           console.log('Imported', cid)
           updateAppState(draft => {
             draft.capture = {
