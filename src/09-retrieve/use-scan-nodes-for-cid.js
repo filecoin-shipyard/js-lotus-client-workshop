@@ -3,6 +3,7 @@ import { LotusRPC } from '@filecoin-shipyard/lotus-client-rpc'
 import { BrowserProvider } from '@filecoin-shipyard/lotus-client-provider-browser'
 import { testnet } from '@filecoin-shipyard/lotus-client-schema'
 import { useImmer } from 'use-immer'
+import IpfsHttpClient from 'ipfs-http-client'
 
 export default function useScanNodesForCid ({ appState, cid }) {
   const [scanningState, setScanningState] = useState({ state: 'idle' })
@@ -35,9 +36,31 @@ export default function useScanNodesForCid ({ appState, cid }) {
             return await response.text()
           }
         })
+        try {
+          const ipfs = IpfsHttpClient({
+            host: 'lotus.testground.ipfs.team',
+            port: 443,
+            protocol: 'https',
+            apiPath: `/api/${nodeNum}/ipfs/api/v0`
+          })
+          //const results = await ipfs.pin.ls(cid)
+          const results = await ipfs.pin.ls(cid)
+          for await (const result of results) {
+            console.log('Jim ipfs.pin.ls', nodeNum, cid, result)
+            updateFound(draft => {
+              draft.push({
+                node: nodeNum,
+                ipfsPin: true
+              })
+            })
+          }
+        } catch (e) {
+          // console.log('Error ipfs.pin.ls', nodeNum, cid)
+        }
         const client = new LotusRPC(provider, { schema: testnet.fullNode })
         try {
           if (state.canceled) return
+          /*
           const hasLocal = await client.clientHasLocal({ '/': cid })
           if (state.canceled) return
           // console.log('Retrieve hasLocal:', nodeNum, hasLocal)
@@ -49,6 +72,7 @@ export default function useScanNodesForCid ({ appState, cid }) {
               })
             })
           }
+          */
           const offers = await client.clientFindData({ '/': cid })
           if (state.canceled) return
           // console.log('Retrieve findData:', nodeNum, offers)

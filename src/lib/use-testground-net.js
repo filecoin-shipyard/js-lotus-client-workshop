@@ -18,6 +18,17 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
     },
     [updateAppState]
   )
+  const updateMiners = useCallback(
+    updateFunc => {
+      updateAppState(draft => {
+        if (!draft.miners) {
+          draft.miners = []
+        }
+        updateFunc(draft.miners)
+      })
+    },
+    [updateAppState]
+  )
   const { selectedNode, nodesScanned, rescan, genesisCid } = appState
 
   useEffect(() => {
@@ -41,6 +52,13 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
         available[i] = true
         updateAvailable(draft => {
           draft[i] = true
+        })
+        const url = `https://${api}/${i}/miner/rpc/v0`
+        const provider = new BrowserProvider(url, { transport: 'http' })
+        const client = new LotusRPC(provider, { schema: testnet.storageMiner })
+        const address = await client.actorAddress()
+        updateMiners(draft => {
+          draft[i] = address
         })
       }
       updateAppState(draft => {

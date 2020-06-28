@@ -31,6 +31,8 @@ export default function Retrieve ({ appState, updateAppState }) {
         {found.map((entry, i) => {
           if (entry.local) {
             return <div key={i}>Node #{entry.node}: Imported locally</div>
+          } else if (entry.ipfsPin) {
+            return <div key={i}>Node #{entry.node}: Pinned to IPFS</div>
           } else {
             return (
               <div key={i}>
@@ -41,9 +43,15 @@ export default function Retrieve ({ appState, updateAppState }) {
                   <br />
                   <button
                     style={{ marginTop: '0.3rem' }}
-                    onClick={retrieveAsJpeg}
+                    onClick={retrieveAsJpegToFs}
                   >
-                    Retrieve as JPEG
+                    Retrieve as JPEG from Node #{entry.node} to Filesystem
+                  </button>
+                  <button
+                    style={{ marginTop: '0.3rem' }}
+                    onClick={retrieveAsJpegToIpfs}
+                  >
+                    Retrieve as JPEG from Node #{entry.node} to IPFS
                   </button>
                   {retrievals[i] && (
                     <>
@@ -60,7 +68,7 @@ export default function Retrieve ({ appState, updateAppState }) {
               </div>
             )
 
-            async function retrieveAsJpeg () {
+            async function retrieveAsJpegToFs () {
               console.log('Retrieve as Jpeg', i, entry)
               const randomId = Math.floor(
                 Math.random() * Number.MAX_SAFE_INTEGER
@@ -116,6 +124,66 @@ export default function Retrieve ({ appState, updateAppState }) {
                 })
               } catch (e) {
                 console.error('Retrieve error', e)
+                updateRetrievals(draft => {
+                  draft[i] = {
+                    state: 'error',
+                    error: e
+                  }
+                })
+              }
+            }
+
+            async function retrieveAsJpegToIpfs () {
+              console.log('Retrieve as Jpeg to Ipfs', i, entry)
+              const randomId = Math.floor(
+                Math.random() * Number.MAX_SAFE_INTEGER
+              )
+              const o = entry.remoteOffer
+              try {
+                updateRetrievals(draft => {
+                  draft[i] = {
+                    state: 'retrieving'
+                  }
+                })
+                const api = 'lotus.testground.ipfs.team/api'
+                const wsUrl = 'wss://' + api + `/${entry.node}/node/rpc/v0`
+                const provider = new BrowserProvider(wsUrl, {
+                  token: async () => {
+                    const tokenUrl =
+                      'https://' + api + `/${entry.node}/testplan/.lotus/token`
+                    const response = await fetch(tokenUrl)
+                    return await response.text()
+                  },
+                  transport: 'http'
+                })
+                const retrieveClient = new LotusRPC(provider, { schema: testnet.fullNode })
+                const walletAddress = await retrieveClient.walletDefaultAddress()
+                const retrievalOffer = {
+                  Root: o.Root,
+                  Size: o.Size,
+                  Total: o.MinPrice,
+                  PaymentInterval: o.PaymentInterval,
+                  PaymentIntervalIncrease: o.PaymentIntervalIncrease,
+                  Client: walletAddress,
+                  Miner: o.Miner,
+                  MinerPeerID: o.MinerPeerID
+                }
+                console.log('Jim clientRetrieve IPFS', retrievalOffer)
+                const result = await retrieveClient.clientRetrieve(
+                  retrievalOffer,
+                  null
+                )
+                console.log('Retrieve IPFS result', result)
+                updateRetrievals(draft => {
+                  draft[i] = {
+                    state: 'success',
+                    url:
+                      `https://lotus.testground.ipfs.team/api/` +
+                      `${entry.node}/ipfs-gateway/ipfs/${cid}`
+                  }
+                })
+              } catch (e) {
+                console.error('Retrieve IPFS error', e)
                 updateRetrievals(draft => {
                   draft[i] = {
                     state: 'error',
