@@ -43,19 +43,20 @@ export default function useScanNodesForCid ({ appState, cid }) {
             protocol: 'https',
             apiPath: `/api/${nodeNum}/ipfs/api/v0`
           })
-          //const results = await ipfs.pin.ls(cid)
-          const results = await ipfs.pin.ls(cid)
-          for await (const result of results) {
-            console.log('Jim ipfs.pin.ls', nodeNum, cid, result)
-            updateFound(draft => {
-              draft.push({
-                node: nodeNum,
-                ipfsPin: true
+          const results = ipfs.pin.ls()
+          for await (const { cid: resultCid } of results) {
+            // console.log('Jim ipfs.pin.ls', nodeNum, cid, resultCid.toString())
+            if (cid === resultCid.toString()) {
+              updateFound(draft => {
+                draft.push({
+                  node: nodeNum,
+                  ipfsPin: true
+                })
               })
-            })
+            }
           }
         } catch (e) {
-          // console.log('Error ipfs.pin.ls', nodeNum, cid)
+          console.warn('Error ipfs.pin.ls', nodeNum, cid, e)
         }
         const client = new LotusRPC(provider, { schema: testnet.fullNode })
         try {

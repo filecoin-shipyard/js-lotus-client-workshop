@@ -4,6 +4,7 @@ import { useImmer } from 'use-immer'
 import { LotusRPC } from '@filecoin-shipyard/lotus-client-rpc'
 import { BrowserProvider } from '@filecoin-shipyard/lotus-client-provider-browser'
 import { testnet } from '@filecoin-shipyard/lotus-client-schema'
+import IpfsHttpClient from 'ipfs-http-client'
 import useLotusClient from '../lib/use-lotus-client'
 import useWatchDefaultWallet from '../lib/use-watch-default-wallet'
 import useScanNodesForCid from './use-scan-nodes-for-cid'
@@ -14,7 +15,7 @@ export default function Retrieve ({ appState, updateAppState }) {
   const [formCid, setFormCid] = useState(cid || '')
   const [retrievals, updateRetrievals] = useImmer({})
   const history = useHistory()
-  const { selectedNode, defaultWalletAddress } = appState
+  const { available, selectedNode, defaultWalletAddress } = appState
   const client = useLotusClient(selectedNode, 'node')
   const balance = useWatchDefaultWallet({ client, updateAppState })
 
@@ -32,7 +33,35 @@ export default function Retrieve ({ appState, updateAppState }) {
           if (entry.local) {
             return <div key={i}>Node #{entry.node}: Imported locally</div>
           } else if (entry.ipfsPin) {
-            return <div key={i}>Node #{entry.node}: Pinned to IPFS</div>
+            return (
+              <div key={i}>
+                Node #{entry.node}: Pinned to IPFS
+                <button style={{ marginLeft: '0.5rem' }} onClick={unpin}>
+                  Unpin and GC
+                </button>
+              </div>
+            )
+
+            async function unpin () {
+              console.log('Unpin', entry.node, cid)
+              try {
+                const ipfs = IpfsHttpClient({
+                  host: 'lotus.testground.ipfs.team',
+                  port: 443,
+                  protocol: 'https',
+                  apiPath: `/api/${entry.node}/ipfs/api/v0`
+                })
+                //const results = await ipfs.pin.ls(cid)
+                const results = await ipfs.pin.rm(cid)
+                for await (const result of results) {
+                  console.log('Jim ipfs.pin.rm', entry.node, cid, result)
+                }
+                await gc(available)
+                document.location.reload()
+              } catch (e) {
+                // console.log('Error ipfs.pin.ls', nodeNum, cid)
+              }
+            }
           } else {
             return (
               <div key={i}>
@@ -91,7 +120,9 @@ export default function Retrieve ({ appState, updateAppState }) {
                   },
                   transport: 'http'
                 })
-                const retrieveClient = new LotusRPC(provider, { schema: testnet.fullNode })
+                const retrieveClient = new LotusRPC(provider, {
+                  schema: testnet.fullNode
+                })
                 const walletAddress = await retrieveClient.walletDefaultAddress()
                 const retrievalOffer = {
                   Root: o.Root,
@@ -135,9 +166,6 @@ export default function Retrieve ({ appState, updateAppState }) {
 
             async function retrieveAsJpegToIpfs () {
               console.log('Retrieve as Jpeg to Ipfs', i, entry)
-              const randomId = Math.floor(
-                Math.random() * Number.MAX_SAFE_INTEGER
-              )
               const o = entry.remoteOffer
               try {
                 updateRetrievals(draft => {
@@ -156,7 +184,9 @@ export default function Retrieve ({ appState, updateAppState }) {
                   },
                   transport: 'http'
                 })
-                const retrieveClient = new LotusRPC(provider, { schema: testnet.fullNode })
+                const retrieveClient = new LotusRPC(provider, {
+                  schema: testnet.fullNode
+                })
                 const walletAddress = await retrieveClient.walletDefaultAddress()
                 const retrievalOffer = {
                   Root: o.Root,
@@ -249,11 +279,36 @@ export default function Retrieve ({ appState, updateAppState }) {
             </>
           )}
           {scanningState.state === 'finished' && (
-            <>Scanned {scanningState.numNodes} nodes</>
+            <>
+              Scanned {scanningState.numNodes} nodes
+              <div>
+                <button onClick={() => gc(available)}>GC all IPFS Nodes</button>
+              </div>
+            </>
           )}
         </div>
       )}
       {content}
     </div>
   )
+}
+
+async function gc (available) {
+  for (const nodeNum in available) {
+    try {
+      const ipfs = IpfsHttpClient({
+        host: 'lotus.testground.ipfs.team',
+        port: 443,
+        protocol: 'https',
+        apiPath: `/api/${nodeNum}/ipfs/api/v0`
+      })
+      console.log(`GC Node #${nodeNum}`)
+      const results = await ipfs.repo.gc()
+      for await (const { cid } of results) {
+        console.log('GC: ', cid)
+      }
+    } catch (e) {
+      console.error('Error ipfs.repo.gc', nodeNum, e)
+    }
+  }
 }

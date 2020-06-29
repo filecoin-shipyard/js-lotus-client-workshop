@@ -85,6 +85,7 @@ export default function useTestgroundNet ({ appState, updateAppState }) {
   }, [
     updateAppState,
     updateAvailable,
+    updateMiners,
     nodesScanned,
     selectedNode,
     genesisCid,
