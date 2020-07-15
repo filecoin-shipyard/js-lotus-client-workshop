@@ -128,7 +128,9 @@ export default function ProposeDeal ({ appState, updateAppState }) {
       Wallet: defaultWalletAddress,
       Miner: targetMiner,
       EpochPrice: epochPrice,
-      MinBlocksDuration: 300
+      MinBlocksDuration: 300,
+      FastRetrieval: true,
+      VerifiedDeal: false
     }
     setStatus('Proposing...')
     try {

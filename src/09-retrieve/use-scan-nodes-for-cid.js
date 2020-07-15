@@ -74,7 +74,7 @@ export default function useScanNodesForCid ({ appState, cid }) {
             })
           }
           */
-          const offers = await client.clientFindData({ '/': cid })
+          const offers = await client.clientFindData({ '/': cid }, null)
           if (state.canceled) return
           // console.log('Retrieve findData:', nodeNum, offers)
           updateFound(draft => {
