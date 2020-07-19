@@ -7,7 +7,8 @@ export default function SelectNode ({ appState, updateAppState }) {
     versionInfo,
     sectorSize,
     testgroundRunId,
-    ipfsVersion
+    ipfsVersion,
+    miners
   } = appState
   const blockDelay = versionInfo && versionInfo.BlockDelay
   const version = versionInfo && versionInfo.Version
@@ -47,7 +48,7 @@ export default function SelectNode ({ appState, updateAppState }) {
                 checked={i === selectedNode}
                 onChange={selectNode}
               />
-              #{i}
+              #{i} (Owns miner {miners[i]})
             </div>
           ))}
       </div>
