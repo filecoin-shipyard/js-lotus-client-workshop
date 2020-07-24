@@ -43,9 +43,7 @@ function DealHistory ({ dealHistoryData, height }) {
         {dealHistoryData.map((record, i) => {
           return (
             <tr key={i}>
-              <td>
-                {dealStateNames[record[0]]}
-              </td>
+              <td>{dealStateNames[record[0]]}</td>
               <td>{blocks(i)}</td>
               <td>{timeElapsed(i)}</td>
             </tr>
@@ -104,7 +102,15 @@ export default function DealList ({ client, appState, cid }) {
   return (
     <div>
       {deals.map(deal => {
-        const { proposalCid, fromNode, miner, date, cid: cidDeal, type } = deal
+        const {
+          proposalCid,
+          fromNode,
+          miner,
+          date,
+          cid: cidDeal,
+          type,
+          fastRetrieval
+        } = deal
         const data = dealData && dealData[proposalCid]
         const clientDealStatus = data && data.clientDealStatus
         const dealState = clientDealStatus && clientDealStatus.State
@@ -118,6 +124,7 @@ export default function DealList ({ client, appState, cid }) {
             <div style={{ fontSize: '50%' }}>
               <div>Date: {new Date(date).toString()}</div>
               <div>Type: {type}</div>
+              <div>Fast Retrieval?: {fastRetrieval ? 'true' : 'false'}</div>
               {!cid && (
                 <div>
                   CID: {cidDeal} <button onClick={copyCid}>Copy</button>

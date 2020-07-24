@@ -6,7 +6,7 @@ import useMiners from '../lib/use-miners'
 import DealList from '../08-deals/deal-list'
 
 export default function ProposeDeal ({ appState, updateAppState }) {
-  const { selectedNode } = appState
+  const { selectedNode, fastRetrieval } = appState
   const client = useLotusClient(selectedNode, 'node')
   const miners = useMiners(client)
   const balance = useWatchDefaultWallet({ client, updateAppState })
@@ -79,6 +79,21 @@ export default function ProposeDeal ({ appState, updateAppState }) {
         <div>
           Balance: {typeof balance !== 'undefined' && balance.toFil()} FIL
         </div>
+        <div>
+          <label>
+            <input
+              type='checkbox'
+              checked={fastRetrieval}
+              onChange={() => {
+                updateAppState(draft => {
+                  draft.fastRetrieval = !fastRetrieval
+                })
+              }}
+              style={{ marginLeft: '1rem' }}
+            />
+            Use Fast Retrieval
+          </label>
+        </div>
       </div>
       <h4>3. Click a miner to propose a deal</h4>
       <div
@@ -129,7 +144,7 @@ export default function ProposeDeal ({ appState, updateAppState }) {
       Miner: targetMiner,
       EpochPrice: epochPrice,
       MinBlocksDuration: 300,
-      FastRetrieval: true,
+      FastRetrieval: fastRetrieval,
       VerifiedDeal: false
     }
     setStatus('Proposing...')
@@ -148,7 +163,8 @@ export default function ProposeDeal ({ appState, updateAppState }) {
           date: Date.now(),
           fromNode: selectedNode,
           miner: targetMiner,
-          cid
+          cid,
+          fastRetrieval
           // FIXME: Block height
           // FIXME: Local blob, size
         })

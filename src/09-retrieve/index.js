@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { useImmer } from 'use-immer'
+import { format, formatDistance } from 'date-fns'
 import { LotusRPC } from '@filecoin-shipyard/lotus-client-rpc'
 import { BrowserProvider } from '@filecoin-shipyard/lotus-client-provider-browser'
 import { testnet } from '@filecoin-shipyard/lotus-client-schema'
@@ -89,7 +90,17 @@ export default function Retrieve ({ appState, updateAppState }) {
                         <div>Error: {retrievals[i].error.message}</div>
                       )}
                       {retrievals[i].url && (
-                        <img src={retrievals[i].url} alt='retrieved' />
+                        <div>
+                          <img src={retrievals[i].url} alt='retrieved' />
+                          <div>
+                            Elapsed time:{' '}
+                            {formatDistance(
+                              retrievals[i].startTime,
+                              retrievals[i].endTime,
+                              { includeSeconds: true }
+                            )}
+                          </div>
+                        </div>
                       )}
                     </>
                   )}
@@ -103,10 +114,12 @@ export default function Retrieve ({ appState, updateAppState }) {
                 Math.random() * Number.MAX_SAFE_INTEGER
               )
               const o = entry.remoteOffer
+              const startTime = Date.now()
               try {
                 updateRetrievals(draft => {
                   draft[i] = {
-                    state: 'retrieving'
+                    state: 'retrieving',
+                    startTime
                   }
                 })
                 const api = 'lotus.testground.ipfs.team/api'
@@ -144,9 +157,12 @@ export default function Retrieve ({ appState, updateAppState }) {
                   fileRef
                 )
                 console.log('Retrieve result', result)
+                const endTime = Date.now()
                 updateRetrievals(draft => {
                   draft[i] = {
                     state: 'success',
+                    startTime,
+                    endTime,
                     url:
                       `https://lotus.testground.ipfs.team/api/` +
                       `${entry.node}/testplan/downloads/` +
@@ -155,9 +171,11 @@ export default function Retrieve ({ appState, updateAppState }) {
                 })
               } catch (e) {
                 console.error('Retrieve error', e)
+                const errorTime = Date.now()
                 updateRetrievals(draft => {
                   draft[i] = {
                     state: 'error',
+                    errorTime,
                     error: e
                   }
                 })
@@ -167,10 +185,12 @@ export default function Retrieve ({ appState, updateAppState }) {
             async function retrieveAsJpegToIpfs () {
               console.log('Retrieve as Jpeg to Ipfs', i, entry)
               const o = entry.remoteOffer
+              const startTime = Date.now()
               try {
                 updateRetrievals(draft => {
                   draft[i] = {
-                    state: 'retrieving'
+                    state: 'retrieving',
+                    startTime
                   }
                 })
                 const api = 'lotus.testground.ipfs.team/api'
@@ -204,9 +224,12 @@ export default function Retrieve ({ appState, updateAppState }) {
                   null
                 )
                 console.log('Retrieve IPFS result', result)
+                const endTime = Date.now()
                 updateRetrievals(draft => {
                   draft[i] = {
                     state: 'success',
+                    startTime,
+                    endTime,
                     url:
                       `https://lotus.testground.ipfs.team/api/` +
                       `${entry.node}/ipfs-gateway/ipfs/${cid}`
@@ -214,9 +237,11 @@ export default function Retrieve ({ appState, updateAppState }) {
                 })
               } catch (e) {
                 console.error('Retrieve IPFS error', e)
+                const errorTime = Date.now()
                 updateRetrievals(draft => {
                   draft[i] = {
                     state: 'error',
+                    errorTime,
                     error: e
                   }
                 })
