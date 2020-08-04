@@ -143,7 +143,7 @@ export default function ProposeDeal ({ appState, updateAppState }) {
       Wallet: defaultWalletAddress,
       Miner: targetMiner,
       EpochPrice: epochPrice,
-      MinBlocksDuration: 300,
+      MinBlocksDuration: 1000000,
       FastRetrieval: fastRetrieval,
       VerifiedDeal: false
     }
