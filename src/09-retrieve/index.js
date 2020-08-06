@@ -133,19 +133,49 @@ export default function Retrieve ({ appState, updateAppState }) {
                   },
                   transport: 'http'
                 })
+                /* Sample from CLI
+                [
+                  {
+                    "Root": {
+                      "/": "QmTpua3DsQvNiLMQYq2jNHuoULc9aCyf7orrPEJ4ArkWay"
+                    },
+                    "Piece": null,
+                    "Size": 2048,
+                    "Total": "4096",
+                    "UnsealPrice": "0",
+                    "PaymentInterval": 1048576,
+                    "PaymentIntervalIncrease": 1048576,
+                    "Client": "t3q32u43bpqph75drafx3uzz7vyilnmpxnfornt4ioswg4rnbyv324xv4nzdoueowujkp5ruusplpex67daswa",
+                    "Miner": "t0100",
+                    "MinerPeer": {
+                      "Address": "t01000",
+                      "ID": "12D3KooWAz5EG6omp5qJ2ZwUMrDFDqnQfkvxfqUjWFMqLyg9hCXF",
+                      "PieceCID": {
+                        "/": "baga6ea4seaqprbncq7j72kda536tffedf6rycximtxt5l45kjavfirjvek4eypq"
+                      }
+                    }
+                  },
+                  {
+                    "Path": "/root/downloads/test2.jpg",
+                    "IsCAR": false
+                  }
+                ]
+                */
                 const retrieveClient = new LotusRPC(provider, {
                   schema: testnet.fullNode
                 })
                 const walletAddress = await retrieveClient.walletDefaultAddress()
                 const retrievalOffer = {
                   Root: o.Root,
+                  Piece: null,
                   Size: o.Size,
                   Total: o.MinPrice,
+                  UnsealPrice: o.UnsealPrice,
                   PaymentInterval: o.PaymentInterval,
                   PaymentIntervalIncrease: o.PaymentIntervalIncrease,
                   Client: walletAddress,
                   Miner: o.Miner,
-                  MinerPeerID: o.MinerPeerID
+                  MinerPeer: o.MinerPeer
                 }
                 const fileRef = {
                   Path: `/root/downloads/${cid}-${randomId}.jpg`,
