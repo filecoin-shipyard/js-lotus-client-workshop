@@ -66,8 +66,8 @@ export default function Retrieve ({ appState, updateAppState }) {
           } else {
             return (
               <div key={i}>
-                Node #{entry.node}: Via miner owned by account{' '}
-                {entry.remoteOffer.Miner}
+                Node #{entry.node}: Via miner {' '}
+                {entry.remoteOffer.MinerPeer.Address}
                 <div style={{ fontSize: '70%', margin: '0.5rem 1rem' }}>
                   Retrieval Price: {entry.remoteOffer.MinPrice}
                   <br />
@@ -240,13 +240,15 @@ export default function Retrieve ({ appState, updateAppState }) {
                 const walletAddress = await retrieveClient.walletDefaultAddress()
                 const retrievalOffer = {
                   Root: o.Root,
+                  Piece: null,
                   Size: o.Size,
                   Total: o.MinPrice,
+                  UnsealPrice: o.UnsealPrice,
                   PaymentInterval: o.PaymentInterval,
                   PaymentIntervalIncrease: o.PaymentIntervalIncrease,
                   Client: walletAddress,
                   Miner: o.Miner,
-                  MinerPeerID: o.MinerPeerID
+                  MinerPeer: o.MinerPeer
                 }
                 console.log('Jim clientRetrieve IPFS', retrievalOffer)
                 const result = await retrieveClient.clientRetrieve(
