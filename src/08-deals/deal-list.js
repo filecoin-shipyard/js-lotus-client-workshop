@@ -131,6 +131,8 @@ export default function DealList ({ client, appState, cid }) {
                 </div>
               )}
               <div>Proposal CID: {proposalCid}</div>
+              <div>Deal ID: {clientDealStatus && clientDealStatus.DealID}</div>
+              <div>Size: {clientDealStatus && clientDealStatus.Size}</div>
               <div>State: {dealData && dealStateNames[dealState]}</div>
               <div>
                 Last update:{' '}
