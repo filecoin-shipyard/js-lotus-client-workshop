@@ -21,8 +21,7 @@ export default function useMinerMonitor ({ appState, updateAppState }) {
       const wsUrl = 'wss://' + api + `/${i}/miner/rpc/v0`
       const provider = new BrowserProvider(wsUrl, {
         token: async () => {
-          const tokenUrl =
-            'https://' + api + `/${i}/testplan/.lotusminer/token`
+          const tokenUrl = 'https://' + api + `/${i}/testplan/.lotusminer/token`
           const response = await fetch(tokenUrl)
           return await response.text()
         }
@@ -51,10 +50,12 @@ export default function useMinerMonitor ({ appState, updateAppState }) {
         const activeSectors = await client.stateMinerActiveSectors(miner)
         console.log('Active Sectors', activeSectors)
         */
-       for (const sector of sectors) {
-         const sectorsStatus = await client.sectorsStatus(sector, false)
-         console.log('Sectors Status', sector, sectorsStatus)
-       }
+        for (const sector of sectors) {
+          const sectorsStatus = await client.sectorsStatus(sector, false)
+          console.log('Sectors Status', sector, sectorsStatus)
+        }
+        const retrievalDeals = await client.marketListRetrievalDeals()
+        console.log('Retrieval Deals', retrievalDeals)
       }
       setTimeout(runTick, interval)
     }
