@@ -6,6 +6,7 @@ import { useImmer } from 'use-immer'
 import produce from 'immer'
 import useTestgroundNet from './lib/use-testground-net'
 import useDealMonitor from './lib/use-deal-monitor'
+import useMinerMonitor from './lib/use-miner-monitor'
 import SelectNode from './00-select-node'
 import ChainHeight from './01-chain-height'
 import MinerAddress from './02-miner-address'
@@ -53,6 +54,7 @@ function App () {
   }, [appState, savedState, setSavedState])
 
   useDealMonitor({ appState, updateAppState })
+  useMinerMonitor({ appState, updateAppState })
 
   const baseProps = {
     appState,
