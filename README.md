@@ -2,6 +2,12 @@
 
 Build a JS web app for Filecoin Lotus
 
+## Status
+
+This repository is in a **standby** state. It is not being actively maintained or kept in sync with the libraries it depends on. It may be archived in the near future. If you are interested in updating or maintaining this library, please open an issue or pull request for discussion.
+
+---
+
 ## Code playgrounds
 
 Try it out in a code playground!
