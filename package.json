@@ -10,7 +10,7 @@
     "clipboard-copy": "^3.1.0",
     "concurrently": "^5.2.0",
     "date-fns": "^2.15.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "http-proxy-middleware": "^1.0.5",
     "immer": "^9.0.6",
     "ipfs-http-client": "^45.0.0",
